@@ -1,12 +1,12 @@
-# ttt
+# TTT
 timing functions, contexts and for-loops
 
-# This is in alpha stage, now just timing an iterable is implemented
+## This project is in concept stage, timing context is not yet implemented.
 
 
 ## Example: timing a function
 ```
-from ttt import timed
+from TTT import timed
 
 @timed
 def foo():
@@ -16,7 +16,7 @@ def foo():
 
 ## Example: timing part of code with a context
 ```
-from ttt import timing
+from TTT import timing
 
 with timing() as t:
 	do_sth
@@ -25,7 +25,7 @@ with timing() as t:
 
 ## Example: timing an iterable
 ```
-from ttt import Timed
+from TTT import Timed
 
 for x in Timed(L):
 	do_sth(x)
