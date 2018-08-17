@@ -1,7 +1,7 @@
 # TTT
 timing functions, contexts and for-loops
 
-## This project is in concept stage, timing context is not yet implemented.
+## This project is in alpha stage. Feedback is welcomed.
 
 
 ## Example: timing a function

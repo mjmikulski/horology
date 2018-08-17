@@ -6,10 +6,10 @@ UNITS = {
     'min': 1 / 60,
     'h': 1 / 3600,
     'd': 1 / (3600 * 24)
-}
+} #todo: use enum also
 
 
-def format(t, unit: str = 's'):
+def format(t, unit: str = 's'):  # todo: add auto mode
     unit = unit.lower()
     if unit not in UNITS.keys():
         raise ValueError(f"Unknown unit: {unit}. Use one od those: {UNITS.keys()}")
