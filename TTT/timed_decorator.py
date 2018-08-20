@@ -1,10 +1,11 @@
 from functools import wraps
 from time import perf_counter as counter
+from typing import Callable
 
 from TTT.tformatter import rescale_time
 
 
-def timed(f=None, name=None, *, unit='s', print_fn=print):
+def timed(f: Callable = None, name=None, *, unit='s', print_fn=print):
     def decorator(_f):
         @wraps(_f)
         def wrapped(*args, **kwargs):

@@ -6,7 +6,7 @@ from TTT.tformatter import rescale_time
 class Timing:
     """ Example:
     >>> with Timing('sleeping: ', unit='ms') as t:
-    ...    sleep(0.159)
+    ...    sleep(0.155)
     sleeping: 15... ms
     """
 

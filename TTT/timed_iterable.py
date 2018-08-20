@@ -3,12 +3,13 @@
 
 from statistics import median, mean
 from time import perf_counter as counter
+from typing import Iterable
 
 from TTT.tformatter import rescale_time
 
 
 class Timed:
-    def __init__(self, iterable, *, unit='s', print_fn=print, summary=True, iterations=True):
+    def __init__(self, iterable: Iterable, *, unit='s', print_fn=print, summary=True, iterations=True):
         self.iterable = iterable
         self.unit = unit
         self._print_fn = print_fn if print_fn else lambda _: None
@@ -33,7 +34,7 @@ class Timed:
                 self.intervals.append(interval)
                 if self._iterations:
                     t, u = rescale_time(interval, self.unit)
-                    self._print_fn(f"Iteration {self._n:4}: {t} {u}")
+                    self._print_fn(f"Iteration {self._n:4}: {t:.3f} {u}")
 
             self._last = now
 
@@ -57,14 +58,7 @@ class Timed:
         elif num_intervals == 2:
             print_str += f"Two iterations: {self.intervals[0]} and {self.intervals[1]}"
         else:
-            print_str += f"total {num_intervals} iterations in {self._last - self._start}\n"
-            print_str += f"min/median/max/average: {min(self.intervals)}/{median(self.intervals)}/{max(self.intervals)}/{mean(self.intervals)}"
+            print_str += f"total {num_intervals} iterations in {self._last - self._start:.3f}\n"
+            print_str += f"min/median/max/average: {min(self.intervals):.3f}/{median(self.intervals):.3f}/{max(self.intervals):.3f}/{mean(self.intervals):.3f}"
 
         self._print_fn(print_str)
-
-#
-# import random
-# L = range(6)
-#
-# for x in Timed(L, unit='ms'):
-#     sleep(random.uniform(0, 0.1 * x))

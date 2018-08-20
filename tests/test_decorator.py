@@ -78,3 +78,6 @@ class TimedContextTest(unittest.TestCase):
         t = bar.interval
 
         self.assertAlmostEqual(t, 0.15, delta=0.02)
+
+if __name__ == '__main__':
+    unittest.main()
