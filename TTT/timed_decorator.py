@@ -1,7 +1,7 @@
 from functools import wraps
 from time import perf_counter as counter, sleep
 
-from TTT.tformatter import format
+from TTT.tformatter import rescale_time
 
 
 def timed(f=None, name=None, *, unit='s', print_fn=print):
@@ -16,7 +16,7 @@ def timed(f=None, name=None, *, unit='s', print_fn=print):
                 nonlocal name
                 if name is None:
                     name = _f.__name__ + ': '
-                t, u = format(interval, unit=unit)
+                t, u = rescale_time(interval, unit=unit)
                 print_str = f'{name}{t} {u}'
                 print_fn(print_str)
 

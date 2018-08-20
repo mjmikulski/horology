@@ -4,7 +4,7 @@
 from statistics import median, mean
 from time import perf_counter as counter
 
-from TTT.tformatter import format
+from TTT.tformatter import rescale_time
 
 
 class Timed:
@@ -32,7 +32,7 @@ class Timed:
                 interval = now - self._last
                 self.intervals.append(interval)
                 if self._iterations:
-                    t, u = format(interval, self.unit)
+                    t, u = rescale_time(interval, self.unit)
                     self._print_fn(f"Iteration {self._n:4}: {t} {u}")
 
             self._last = now
@@ -46,7 +46,7 @@ class Timed:
                 self._print_summary()
             raise StopIteration
 
-    def _print_summary(self):  # todo: use format function
+    def _print_summary(self):  # todo: use rescale_time function
         num_intervals = len(self.intervals)
         print_str = "\n" if self._iterations else ""  # leave a empty line if iterations are printed
 

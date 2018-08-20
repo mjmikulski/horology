@@ -1,6 +1,6 @@
 import unittest
 
-from TTT.tformatter import auto_unit, format
+from TTT.tformatter import auto_unit, rescale_time
 
 
 class TformatterTest(unittest.TestCase):
@@ -12,23 +12,23 @@ class TformatterTest(unittest.TestCase):
         self.assertEqual(auto_unit(2000), 'min')
 
     def test_simple_format(self):
-        t, u = format(6, unit='s')
+        t, u = rescale_time(6, unit='s')
         self.assertEqual((t, u), (6, 's'))
 
-        t, u = format(6, unit='ms')
+        t, u = rescale_time(6, unit='ms')
         self.assertEqual((t, u), (6000, 'ms'))
 
-        t, u = format(6, unit='min')
+        t, u = rescale_time(6, unit='min')
         self.assertEqual((t, u), (0.1, 'min'))
 
     def test_auto_format(self):
-        t, u = format(6, unit='a')
+        t, u = rescale_time(6, unit='a')
         self.assertEqual((t, u), (6, 's'))
 
-        t, u = format(0.006, unit='auto')
+        t, u = rescale_time(0.006, unit='auto')
         self.assertEqual((t, u), (6, 'ms'))
 
-        t, u = format(6000, unit='AUTO')
+        t, u = rescale_time(6000, unit='AUTO')
         self.assertEqual((t, u), (100, 'min'))
 
 

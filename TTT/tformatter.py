@@ -9,7 +9,7 @@ UNITS = {
 }  # todo: use enum, allow alternatives, eg. h == hs == hours
 
 
-def format(t, unit: str = 's'):
+def rescale_time(t, unit):
     unit = unit.lower()
     if unit in ('auto', 'a'):
         unit = auto_unit(t)
