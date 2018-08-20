@@ -1,5 +1,5 @@
 from functools import wraps
-from time import perf_counter as counter, sleep
+from time import perf_counter as counter
 
 from TTT.tformatter import rescale_time
 
@@ -11,15 +11,15 @@ def timed(f=None, name=None, *, unit='s', print_fn=print):
             start = counter()
             return_value = _f(*args, **kwargs)
             interval = counter() - start
+            wrapped.interval = interval
 
             if print_fn is not None:
                 nonlocal name
                 if name is None:
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{name}{t} {u}'
+                print_str = f'{name}{t:.3f} {u}'
                 print_fn(print_str)
-
             return return_value
 
         return wrapped
@@ -28,25 +28,3 @@ def timed(f=None, name=None, *, unit='s', print_fn=print):
         return decorator
     else:
         return decorator(f)
-
-# # Simple example
-#
-# @timed
-# def foo():
-#     sleep(0.1)
-#
-# foo()
-#
-#
-# # Still quite simple example
-#
-# @timed(name='bar elapsed: ', unit='ms')
-# def bar():
-#     """Very important function"""
-#     sleep(0.2)
-#
-# bar()
-#
-# # bar is transparently wrapped
-# print(bar.__doc__)
-# print(bar.__name__)

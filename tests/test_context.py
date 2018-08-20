@@ -18,15 +18,14 @@ class TimedContextTest(unittest.TestCase):
         self.assertTrue(print_str.startswith('0.1'))
 
     def test_with_name_and_unit(self):
-        name = 'Preprocessing: '
         out = StringIO()
         with redirect_stdout(out):
-            with Timing(name=name, unit='ms'):
-                sleep(0.159)
+            with Timing(name='Preprocessing: ', unit='ms'):
+                sleep(0.155)
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith(name + '15'))
+        self.assertTrue(print_str.startswith('Preprocessing: 15'))
         self.assertTrue(print_str.endswith('ms'))
 
     def test_interval_property(self):

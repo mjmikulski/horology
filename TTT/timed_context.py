@@ -33,7 +33,7 @@ class Timing:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t} {u}"
+        print_str = f"{self.name}{t:.3f} {u}"
         self._print_fn(print_str)
 
 
