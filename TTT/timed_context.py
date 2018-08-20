@@ -4,6 +4,12 @@ from TTT.tformatter import rescale_time
 
 
 class Timing:
+    """ Example:
+    >>> with Timing('sleeping: ', unit='ms') as t:
+    ...    sleep(0.159)
+    sleeping: 15... ms
+    """
+
     def __init__(self, name=None, *, unit='s', print_fn=print):
         self.name = name if name else ""
         self.unit = unit
@@ -32,7 +38,6 @@ class Timing:
 
 
 
-# with Timing('sleeping: ', unit='ns') as t:
-#     sleep(0.2)
-#
-# print(t.interval)
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod(optionflags=doctest.ELLIPSIS)
