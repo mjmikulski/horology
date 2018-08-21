@@ -21,11 +21,11 @@ class TimedContextTest(unittest.TestCase):
         out = StringIO()
         with redirect_stdout(out):
             with Timing(name='Preprocessing: ', unit='ms'):
-                sleep(0.155)
+                sleep(0.15)
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('Preprocessing: 15'))
+        self.assertTrue(print_str.startswith('Preprocessing: 1'))
         self.assertTrue(print_str.endswith('ms'))
 
     def test_interval_property(self):

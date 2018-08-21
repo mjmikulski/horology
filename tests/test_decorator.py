@@ -11,7 +11,7 @@ class TimedContextTest(unittest.TestCase):
         # Define a decorated function:
         @timed
         def foo():
-            sleep(0.155)
+            sleep(0.15)
 
         out = StringIO()
         with redirect_stdout(out):
@@ -20,14 +20,14 @@ class TimedContextTest(unittest.TestCase):
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('foo: 0.15'))
+        self.assertTrue(print_str.startswith('foo: 0.1'))
         self.assertTrue(print_str.endswith('s'))
 
     def test_with_name_and_unit(self):
         # Define a decorated function:
         @timed(name='Function foo elapsed ', unit='ms')
         def foo():
-            sleep(0.155)
+            sleep(1.15)
 
         out = StringIO()
         with redirect_stdout(out):
@@ -36,7 +36,7 @@ class TimedContextTest(unittest.TestCase):
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('Function foo elapsed 15'))
+        self.assertTrue(print_str.startswith('Function foo elapsed 11'))
         self.assertTrue(print_str.endswith(' ms'))
 
     def test_wrapping(self):
