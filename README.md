@@ -1,32 +1,129 @@
 # TTT
-timing functions, contexts and for-loops
+Measure time of your for-loops...
 
-## This project is in alpha stage. Feedback is welcomed.
+...and contexts and funtions
+
+Following 3 tools let you measure  practically any part of your Python code.
+
+## Usage
 
 
-## Example: timing a function
+
+### Timing an iterable (list, generator, etc)
+#### Quick example
+```python
+from TTT import Timed
+L = ['cat', 'dog', 'crocodile']
+
+for x in Timed(L):
+	feed(x)
+```
+Result:
+```
+iteration    1: 12 s
+iteration    2: 8 s
+iteration    3: 289 s
+
+min/median/max/average: 8/12/289/103
+```
+
+#### More cool stuff:
+You can specify where (if at all) you want each iteration and summary to be printed, eg.:
+```
+for x in Timed(L, unit='ms', iteration_print_fn=logger.debug, summary_print_fn=loger.info):
+	feed(x)
+```
+
+
+
+
+
+
+
+
+
+
+
+### Timing a function with a `@timed` decorator
+#### Quick example
 ```
 from TTT import timed
 
 @timed
 def foo():
-	pass
+    pass
+```
+Result:
+```
+>>> foo()
+foo: 0.142 s
+```
+
+#### More cool stuff:
+Personalize time unit and name
+```
+@timed(unit='ms', name='Processing took ')
+def bar():
+    pass
+```
+Result:
+```
+>>> bar()
+Processing took 18 ms
 ```
 
 
-## Example: timing part of code with a context
+
+
+
+
+
+
+
+
+
+
+### Timing part of code with a `timing` context
+#### Quick example
+Just wrap your code using `with` statement
 ```
 from TTT import timing
 
-with timing() as t:
-	do_sth
+with timing(name='Important calculations: '):
+    pass
+```
+Result:
+```
+Important calculations: 12.132 s
+```
+
+#### More cool stuff:
+You can suppress default printing and directly use measured time (also within context)
+```
+with timing(print_fn=None) as t:
+    pass
+    
+make_use_of(t.interval)
 ```
 
 
-## Example: timing an iterable
-```
-from TTT import Timed
 
-for x in Timed(L):
-	do_sth(x)
+
+
+
+
+
+## Contributions 
+1. Contributions are welcomed
+2. Make sure that all tests pass (both unittests and doctests), you can run them all with:
+```bash
+nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 ```
+3. If any questions, feel free to contact me.
+
+
+
+
+## Internals:
+TTT internally measures time with `perf_counter` which provides *highest available resolution,*
+ see [docs](https://docs.python.org/3/library/time.html#time.perf_counter).
