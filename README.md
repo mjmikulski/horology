@@ -3,9 +3,15 @@ conveniently measures time of your for-loops, contexts and functions.
 
 Following 3 tools let you measure practically any part of your Python code.
 
+## Instalation
+Simply:
+```
+pip install horology
+```
+
+
+
 ## Usage
-
-
 
 ### Timing an iterable (list, tuple, generator, etc)
 #### Quick example
@@ -38,15 +44,6 @@ for x in Timed(animals, unit='ms',
 ```
 
 
-
-
-
-
-
-
-
-
-
 ### Timing a function with a `@timed` decorator
 #### Quick example
 ```python
@@ -76,16 +73,6 @@ Processing took 0.18 s
 ```
 
 
-
-
-
-
-
-
-
-
-
-
 ### Timing part of code with a `Timing` context
 #### Quick example
 Just wrap your code using `with` statement
@@ -110,15 +97,11 @@ make_use_of(t.interval)
 ```
 
 
-
 ## Time units
 Time units are by default automatically adjusted, for example you will see
 `foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, 
 you can overwrite this by setting `unit` argument with one of those: 
 `['ns', 'us', 'ms', 's', 'min', 'h', 'd']`.
-
-
-
 
 
 ## Contributions 
@@ -128,8 +111,6 @@ you can overwrite this by setting `unit` argument with one of those:
 nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 ```
 3. If any questions, feel free to contact me.
-
-
 
 
 ## Internals:
