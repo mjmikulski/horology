@@ -114,7 +114,8 @@ make_use_of(t.interval)
 ## Time units
 Time units are by default automatically adjusted, for example you will see
 `foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, 
-you can overwrite this by `unit` argument.
+you can overwrite this by setting `unit` argument with one of those: 
+`['ns', 'us', 'ms', 's', 'min', 'h', 'd']`.
 
 
 
