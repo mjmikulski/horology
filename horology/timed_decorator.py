@@ -2,7 +2,7 @@ from functools import wraps
 from time import perf_counter as counter
 from typing import Callable
 
-from TTT.tformatter import rescale_time
+from horology.tformatter import rescale_time
 
 
 def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):

@@ -2,7 +2,7 @@ from statistics import median, mean, stdev
 from time import perf_counter as counter
 from typing import Iterable
 
-from TTT.tformatter import rescale_time
+from horology.tformatter import rescale_time
 
 
 class Timed:

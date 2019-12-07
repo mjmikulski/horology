@@ -1,6 +1,6 @@
 from time import perf_counter as counter, sleep
 
-from TTT.tformatter import rescale_time
+from horology.tformatter import rescale_time
 
 
 class Timing:

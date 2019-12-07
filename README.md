@@ -12,7 +12,7 @@ Following 3 tools let you measure  practically any part of your Python code.
 ### Timing an iterable (list, generator, etc)
 #### Quick example
 ```python
-from TTT import Timed
+from horology import Timed
 L = ['cat', 'dog', 'crocodile']
 
 for x in Timed(L):
@@ -49,7 +49,7 @@ for x in Timed(L, unit='ms',
 ### Timing a function with a `@timed` decorator
 #### Quick example
 ```python
-from TTT import timed
+from horology import timed
 
 @timed
 def foo():
@@ -89,7 +89,7 @@ Processing took 0.18 s
 #### Quick example
 Just wrap your code using `with` statement
 ```python
-from TTT import timing
+from horology import timing
 
 with timing(name='Important calculations: '):
     pass

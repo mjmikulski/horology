@@ -1,6 +1,6 @@
 import unittest
 
-from TTT.tformatter import auto_unit, rescale_time
+from horology.tformatter import auto_unit, rescale_time
 
 
 class TformatterTest(unittest.TestCase):

@@ -3,7 +3,7 @@ from contextlib import redirect_stdout
 from io import StringIO
 from time import sleep
 
-from TTT import timed
+from horology import timed
 
 
 class TimedDecoratorTest(unittest.TestCase):
