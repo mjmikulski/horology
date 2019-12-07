@@ -10,7 +10,7 @@ class Timing:
     sleeping: 15... ms
     """
 
-    def __init__(self, name=None, *, unit='s', print_fn=print):
+    def __init__(self, name=None, *, unit='a', print_fn=print):
         self.name = name if name else ""
         self.unit = unit
         self._print_fn = print_fn if print_fn else lambda _: None
@@ -20,6 +20,10 @@ class Timing:
 
     @property
     def interval(self):
+        """ Time elapsed in seconds
+        If still in the context, returns time elapsed form the moment of entering to the context.
+        If the context has been already left, returns time spent in the context.
+        """
         if self._interval:  # when context exited
             return self._interval
         else:  # when still in context
@@ -33,7 +37,7 @@ class Timing:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.3f} {u}"
+        print_str = f"{self.name}{t:.2f} {u}"
         self._print_fn(print_str)
 
 

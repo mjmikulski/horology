@@ -1,7 +1,7 @@
 # TTT
 Measure time of your for-loops...
 
-...and contexts and funtions
+...and contexts and functions
 
 Following 3 tools let you measure  practically any part of your Python code.
 
@@ -16,7 +16,7 @@ from TTT import Timed
 L = ['cat', 'dog', 'crocodile']
 
 for x in Timed(L):
-	feed(x)
+    feed(x)
 ```
 Result:
 ```
@@ -29,9 +29,11 @@ min/median/max/average: 8/12/289/103
 
 #### More cool stuff:
 You can specify where (if at all) you want each iteration and summary to be printed, eg.:
-```
-for x in Timed(L, unit='ms', iteration_print_fn=logger.debug, summary_print_fn=loger.info):
-	feed(x)
+```python
+for x in Timed(L, unit='ms', 
+               iteration_print_fn=logger.debug, 
+               summary_print_fn=loger.info):
+    feed(x)
 ```
 
 
@@ -46,7 +48,7 @@ for x in Timed(L, unit='ms', iteration_print_fn=logger.debug, summary_print_fn=l
 
 ### Timing a function with a `@timed` decorator
 #### Quick example
-```
+```python
 from TTT import timed
 
 @timed
@@ -56,20 +58,20 @@ def foo():
 Result:
 ```
 >>> foo()
-foo: 0.142 s
+foo: 142 ms
 ```
 
 #### More cool stuff:
 Personalize time unit and name
-```
-@timed(unit='ms', name='Processing took ')
+```python
+@timed(unit='s', name='Processing took ')
 def bar():
     pass
 ```
 Result:
 ```
 >>> bar()
-Processing took 18 ms
+Processing took 0.18 s
 ```
 
 
@@ -86,7 +88,7 @@ Processing took 18 ms
 ### Timing part of code with a `timing` context
 #### Quick example
 Just wrap your code using `with` statement
-```
+```python
 from TTT import timing
 
 with timing(name='Important calculations: '):
@@ -99,7 +101,7 @@ Important calculations: 12.132 s
 
 #### More cool stuff:
 You can suppress default printing and directly use measured time (also within context)
-```
+```python
 with timing(print_fn=None) as t:
     pass
     

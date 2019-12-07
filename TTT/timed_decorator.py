@@ -5,7 +5,7 @@ from typing import Callable
 from TTT.tformatter import rescale_time
 
 
-def timed(f: Callable = None, name=None, *, unit='s', print_fn=print):
+def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
     def decorator(_f):
         @wraps(_f)
         def wrapped(*args, **kwargs):
@@ -19,7 +19,7 @@ def timed(f: Callable = None, name=None, *, unit='s', print_fn=print):
                 if name is None:
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{name}{t:.3f} {u}'
+                print_str = f'{name}{t:.2f} {u}'
                 print_fn(print_str)
             return return_value
 

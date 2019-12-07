@@ -6,7 +6,7 @@ from time import sleep
 from TTT import timed
 
 
-class TimedContextTest(unittest.TestCase):
+class TimedDecoratorTest(unittest.TestCase):
     def test_no_args(self):
         # Define a decorated function:
         @timed
@@ -20,8 +20,8 @@ class TimedContextTest(unittest.TestCase):
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('foo: 0.1'))
-        self.assertTrue(print_str.endswith('s'))
+        self.assertTrue(print_str.startswith('foo: 1'))
+        self.assertTrue(print_str.endswith('ms'))
 
     def test_with_name_and_unit(self):
         # Define a decorated function:

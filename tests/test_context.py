@@ -15,7 +15,8 @@ class TimedContextTest(unittest.TestCase):
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('0.1'))
+        self.assertTrue(print_str.startswith('1'))
+        self.assertTrue(print_str.endswith('ms'))
 
     def test_with_name_and_unit(self):
         out = StringIO()

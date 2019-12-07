@@ -6,7 +6,7 @@ from time import sleep
 from TTT import Timed
 
 
-class TimedContextTest(unittest.TestCase):
+class TimedIterableTest(unittest.TestCase):
     def test_no_iter(self):
         out = StringIO()
         with redirect_stdout(out):
@@ -18,14 +18,17 @@ class TimedContextTest(unittest.TestCase):
     def test_one_iteration(self):
         out = StringIO()
         with redirect_stdout(out):
-            for _ in Timed([1]):
+            for _ in Timed([1], unit='s'):
                 sleep(0.15)
             print_str: str = out.getvalue().strip()
 
         lines = print_str.split('\n')
+
         self.assertTrue(lines[0].startswith('iteration    1: 0.1'))
         self.assertTrue(lines[0].endswith('s'))
+
         self.assertEqual(lines[1], '')
+
         self.assertTrue(lines[2].startswith('one iteration: 0.1'))
         self.assertTrue(lines[2].endswith('s'))
 
@@ -37,8 +40,15 @@ class TimedContextTest(unittest.TestCase):
             print_str: str = out.getvalue().strip()
 
         lines = print_str.split('\n')
-        self.assertTrue(lines[-2].startswith('total 5 iterations in 1.5'))
-        self.assertTrue(lines[-1].startswith('min/median/max/average: '))
+
+        self.assertTrue(lines[-3].startswith('total 5 iterations in 1.5'))
+        self.assertTrue(lines[-2].endswith('s'))
+
+        self.assertTrue(lines[-2].startswith('min/median/max:'))
+        self.assertTrue(lines[-2].endswith('ms'))
+
+        self.assertTrue(lines[-1].startswith('average (std): 3'))
+        self.assertTrue(lines[-1].endswith('ms'))
 
     def test_no_print(self):
         out = StringIO()
