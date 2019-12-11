@@ -1,4 +1,6 @@
-# Horology
+# `Horology`
+[![Downloads](https://pepy.tech/badge/horology/week)](https://pepy.tech/project/horology/week)
+
 conveniently measures time of your for-loops, contexts and functions.
 
 Following 3 tools let you measure practically any part of your Python code.
@@ -114,5 +116,5 @@ nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 
 
 ## Internals:
-TTT internally measures time with `perf_counter` which provides *highest available resolution,*
+Horology internally measures time with `perf_counter` which provides *highest available resolution,*
  see [docs](https://docs.python.org/3/library/time.html#time.perf_counter).
