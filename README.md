@@ -3,6 +3,9 @@
 
 conveniently measures time of your for-loops, contexts and functions.
 
+![](hourglass.jpg "Photo by Mike from Pexels")
+
+
 Following 3 tools let you measure practically any part of your Python code.
 
 ## Instalation
