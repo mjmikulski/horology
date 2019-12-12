@@ -3,8 +3,8 @@
 
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/alerts/)
-[![PyPI version](https://badge.fury.io/py/horology.svg)](https://badge.fury.io/py/horology)
 [![Downloads](https://pepy.tech/badge/horology/week)](https://pepy.tech/project/horology/week)
+[![PyPI version](https://badge.fury.io/py/horology.svg)](https://badge.fury.io/py/horology)
 
 Conveniently measures time of your loops, contexts and functions.
 

@@ -23,15 +23,15 @@ def rescale_time(t, unit):
 def auto_unit(t):
     if t < 10 ** -6:
         return 'ns'
-    elif t < 10 ** -3:
+    if t < 10 ** -3:
         return 'us'
-    elif t < 1:
+    if t < 1:
         return 'ms'
-    elif t < 10 ** 3:
+    if t < 10 ** 3:
         return 's'
-    elif t < 6 * 10 ** 4:
+    if t < 6 * 10 ** 4:
         return 'min'
-    elif t < 36 * 10 ** 5:
+    if t < 36 * 10 ** 5:
         return 'h'
-    else:
-        return 'd'
+
+    return 'd'

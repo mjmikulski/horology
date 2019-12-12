@@ -29,7 +29,6 @@ class Timing:
         else:  # when still in context
             return counter() - self._start
 
-
     def __enter__(self):
         self._start = counter()
         return self
@@ -41,7 +40,7 @@ class Timing:
         self._print_fn(print_str)
 
 
-
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod(optionflags=doctest.ELLIPSIS)

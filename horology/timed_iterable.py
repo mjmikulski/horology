@@ -64,7 +64,7 @@ class Timed:
             t_max, _ = rescale_time(max(self.intervals), u)
             t_std, _ = rescale_time(stdev(self.intervals), u)
 
-            print_str += f"total {self.n} iterations in {self.total:.2f} {u_total}\n"
+            print_str += f"total {self.n} iterations in {t_total:.2f} {u_total}\n"
             print_str += f"min/median/max: " \
                          f"{t_min:.2f}" \
                          f"/{t_median:.2f}" \
