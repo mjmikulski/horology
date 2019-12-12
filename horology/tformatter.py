@@ -1,12 +1,12 @@
 
 UNITS = (
-    (('ns'), (10 ** -9)),
-    (('us'), (10 ** -6)),
-    (('ms'), (10 ** -3)),
-    (('s'), (1)),
-    (('min'), (60)),
-    (('h', 'hs', 'hours'), (3600)),
-    (('d'), (3600 * 24))
+    (('ns'), (10 ** -9), (10 ** -6)),
+    (('us'), (10 ** -6), (10 ** -3)),
+    (('ms'), (10 ** -3), (1)),
+    (('s'), (1), (10 ** 3)),
+    (('min'), (60), (6 * 10 ** 4)),
+    (('h', 'hs', 'hours'), (3600), (36 * 10 ** 5)),
+    (('d'), (3600 * 24), (None))
   )
 
 
@@ -29,7 +29,7 @@ def rescale_time(interval, unit):
     if unit in ('auto', 'a'):
         unit = auto_unit(interval)
 
-    for units, calculation  in UNITS:
+    for units, calculation, _  in UNITS:
         if unit in units:
             return interval / calculation, unit
             
@@ -37,17 +37,18 @@ def rescale_time(interval, unit):
     
 
 def auto_unit(interval):
-    if interval < 10 ** -6:
-        return 'ns'
-    elif interval < 10 ** -3:
-        return 'us'
-    elif interval < 1:
-        return 'ms'
-    elif interval < 10 ** 3:
-        return 's'
-    elif interval < 6 * 10 ** 4:
-        return 'min'
-    elif interval < 36 * 10 ** 5:
-        return 'h'
-    else:
-        return 'd'
+    """Automatically find a unit from the interval passed. 
+    
+    Arguments:
+        interval {float} -- Interval
+    
+    Returns:
+        str -- String representation of the unit found.  
+                Will return the 1st item in the tuple or 'd'.
+    """
+
+    for units, _, find_unit_sum in UNITS:
+        if interval < find_unit_sum:
+            return units[0]
+        else:
+            return 'd'
