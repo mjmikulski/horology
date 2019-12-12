@@ -1,4 +1,7 @@
 
+# A tuple of tuples containing:
+# ( <unit_names>, <rescale_calc>, <auto_cal> )
+
 UNITS = (
     (('ns'), (10 ** -9), (10 ** -6)),
     (('us'), (10 ** -6), (10 ** -3)),
