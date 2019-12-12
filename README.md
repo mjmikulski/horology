@@ -1,12 +1,16 @@
 # `Horology`
+
+
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/alerts/)
+[![PyPI version](https://badge.fury.io/py/horology.svg)](https://badge.fury.io/py/horology)
 [![Downloads](https://pepy.tech/badge/horology/week)](https://pepy.tech/project/horology/week)
 
-conveniently measures time of your for-loops, contexts and functions.
+Conveniently measures time of your loops, contexts and functions.
 
 ![](hourglass.jpg "Photo by Mike from Pexels")
 
 
-Following 3 tools let you measure practically any part of your Python code.
 
 ## Instalation
 Simply:
@@ -17,6 +21,7 @@ pip install horology
 
 
 ## Usage
+Following 3 tools let you measure practically any part of your Python code.
 
 ### Timing an iterable (list, tuple, generator, etc)
 #### Quick example
