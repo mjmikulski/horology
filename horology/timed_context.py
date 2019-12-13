@@ -6,8 +6,8 @@ from horology.tformatter import rescale_time
 class Timing:
     """ Example:
     >>> with Timing('sleeping: ', unit='ms') as t:
-    ...    sleep(0.155)
-    sleeping: 15... ms
+    ...    sleep(0.25)
+    sleeping: 2... ms
     """
 
     def __init__(self, name=None, *, unit='a', print_fn=print):
