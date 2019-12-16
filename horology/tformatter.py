@@ -3,13 +3,13 @@
 # ( <unit_names>, <rescale_calc>, <auto_cal> )
 
 UNITS = (
-    (('ns'), (10 ** -9), (10 ** -6)),
-    (('us'), (10 ** -6), (10 ** -3)),
-    (('ms'), (10 ** -3), (1)),
-    (('s'), (1), (10 ** 3)),
-    (('min'), (60), (6 * 10 ** 4)),
-    (('h', 'hs', 'hours'), (3600), (36 * 10 ** 5)),
-    (('d'), (3600 * 24), (None))
+    (('ns',), 10 ** -9, 10 ** -6),
+    (('us',), 10 ** -6, 10 ** -3),
+    (('ms',), 10 ** -3, 1),
+    (('s',), 1,  10 ** 3),
+    (('min',), 60, 6 * 10 ** 4),
+    (('h', 'hs', 'hours'), 3600, 36 * 10 ** 5),
+    (('d',), 3600 * 24, None)
   )
 
 
@@ -53,5 +53,4 @@ def auto_unit(interval):
     for units, _, find_unit_sum in UNITS:
         if interval < find_unit_sum:
             return units[0]
-        else:
-            return 'd'
+    return 'd'
