@@ -7,14 +7,14 @@
 
 [![CircleCI](https://circleci.com/gh/mjmikulski/horology/tree/master.svg?style=svg)](https://circleci.com/gh/mjmikulski/horology/tree/master)
 
-Conveniently measures time of your loops, contexts and functions.
+Conveniently measures the time of your loops, contexts and functions.
 
 ![](hourglass.jpg "Photo by Mike from Pexels")
 
 
 
 ## Instalation
-Simply:
+Simply enter:
 ```
 pip install horology
 ```
@@ -22,7 +22,7 @@ pip install horology
 
 
 ## Usage
-Following 3 tools let you measure practically any part of your Python code.
+The following 3 tools will let you measure practically any part of your Python code.
 
 ### Timing an iterable (list, tuple, generator, etc)
 #### Quick example
@@ -86,7 +86,7 @@ Processing took 0.18 s
 
 ### Timing part of code with a `Timing` context
 #### Quick example
-Just wrap your code using `with` statement
+Just wrap your code using a `with` statement
 ```python
 from horology import Timing
 
@@ -111,7 +111,7 @@ make_use_of(t.interval)
 ## Time units
 Time units are by default automatically adjusted, for example you will see
 `foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, 
-you can overwrite this by setting `unit` argument with one of those: 
+you can override this by setting the `unit` argument with one of these names: 
 `['ns', 'us', 'ms', 's', 'min', 'h', 'd']`.
 
 
@@ -125,5 +125,5 @@ nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 
 
 ## Internals:
-Horology internally measures time with `perf_counter` which provides *highest available resolution,*
+Horology internally measures time with `perf_counter` which provides the *highest available resolution,*
  see [docs](https://docs.python.org/3/library/time.html#time.perf_counter).

@@ -22,7 +22,7 @@ class Timing:
     def interval(self):
         """ Time elapsed in seconds
         If still in the context, returns time elapsed form the moment of entering to the context.
-        If the context has been already left, returns time spent in the context.
+        If the context has been already left, returns the time spent in the context.
         """
         if self._interval:  # when context exited
             return self._interval
