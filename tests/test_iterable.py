@@ -77,7 +77,13 @@ class TimedIterableTest(unittest.TestCase):
 
         lines = print_str.split('\n')
 
-        self.assertTrue(lines[-3].startswith('total 3 iterations in 6'))
+        # we check for sth like this:
+        # total 3 iterations in 63642200.00 ns
+        self.assertTrue(lines[-3].startswith('total 3 iterations in'))
+        total_t_ns = float(lines[-3].split(' ')[-2])
+        self.assertGreater(total_t_ns, 40_000_000)
+        self.assertLess(total_t_ns, 80_000_000)
+
         self.assertTrue(lines[-2].endswith('ns'))
         self.assertGreaterEqual(len(lines[-2]), 50)
 
