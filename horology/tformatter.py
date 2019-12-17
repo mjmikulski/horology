@@ -1,5 +1,5 @@
 
-def return_units():
+def return_names():
     """
     Create a namedtuple of data.  Can be unpacked or accessed using dot notation.
     
@@ -30,21 +30,21 @@ def rescale_time(interval, unit):
         unit {str} -- String of Unit type.
     
     Raises:
-        ValueError: Unknown unit: {unit}. Use one of the following: {[x[0] for x in UNITS]} or 'auto' 
+        ValueError: Unknown unit: {unit}. Use one of the following: {[x[0] for x in names]} or 'auto' 
     
     Returns:
-        tuple -- interval / calculation, unit
+        tuple -- interval / scale, unit
     """
     unit = unit.lower()
 
     if unit in ('auto', 'a'):
         unit = auto_unit(interval)
 
-    for units, calculation, _  in return_units():
-        if unit in units:
-            return interval / calculation, unit
+    for names, scale, _  in return_names():
+        if unit in names:
+            return interval / scale, unit
             
-    raise ValueError(f"Unknown unit: {unit}. Use one of the following: {[x[0] for x in return_units()]} or 'auto'")
+    raise ValueError(f"Unknown unit: {unit}. Use one of the following: {[x[0] for x in return_names()]} or 'auto'")
     
 
 def auto_unit(interval):
@@ -59,7 +59,7 @@ def auto_unit(interval):
                 Will return the 1st item in the tuple or 'd'.
     """
 
-    for units, _, find_unit_sum in return_units():
-        if interval < find_unit_sum:
-            return units[0]
+    for names, _, limit in return_names():
+        if interval < limit:
+            return names[0]
     return 'd'
