@@ -1,37 +1,65 @@
 
-UNITS = {
-    'ns': 10 ** -9,
-    'us': 10 ** -6,
-    'ms': 10 ** -3,
-    's': 1,
-    'min': 60,
-    'h': 3600,
-    'd': 3600 * 24
-}  # todo: allow alternatives, eg. h == hs == hours
+def return_names():
+    """
+    Create a namedtuple of data.  Can be unpacked or accessed using dot notation.
+    
+    Returns:
+        namedtuple -- names scale unit
+    """
+    from collections import namedtuple
+
+    Unit = namedtuple('Unit', 'names scale limit')
+
+    return (
+        Unit(('ns',), 10 ** -9, 10 ** -6),
+        Unit(('us',), 10 ** -6, 10 ** -3),
+        Unit(('ms',), 10 ** -3, 1),
+        Unit(('s',), 1,  10 ** 3),
+        Unit(('min',), 60, 6 * 10 ** 4),
+        Unit(('h', 'hs', 'hours'), 3600, 36 * 10 ** 5),
+        Unit(('d',), 3600 * 24, None)
+    )
 
 
-def rescale_time(t, unit):
+def rescale_time(interval, unit):
+    """
+    Calculate and return a readable tuple from the arguments passed.
+    
+    Arguments:
+        interval {float} -- Interval
+        unit {str} -- String of Unit type.
+    
+    Raises:
+        ValueError: Unknown unit: {unit}. Use one of the following: {[x[0] for x in names]} or 'auto' 
+    
+    Returns:
+        tuple -- interval / scale, unit
+    """
     unit = unit.lower()
+
     if unit in ('auto', 'a'):
-        unit = auto_unit(t)
-    if unit not in UNITS.keys():
-        raise ValueError(f"Unknown unit: {unit}. Use one od those: {UNITS.keys()} or 'auto'")
+        unit = auto_unit(interval)
 
-    return t / UNITS[unit], unit
+    for names, scale, _  in return_names():
+        if unit in names:
+            return interval / scale, unit
+            
+    raise ValueError(f"Unknown unit: {unit}. Use one of the following: {[x[0] for x in return_names()]} or 'auto'")
+    
 
+def auto_unit(interval):
+    """
+    Automatically find a unit from the interval passed. 
+    
+    Arguments:
+        interval {float} -- Interval
+    
+    Returns:
+        str -- String representation of the unit found.  
+                Will return the 1st item in the tuple or 'd'.
+    """
 
-def auto_unit(t):
-    if t < 10 ** -6:
-        return 'ns'
-    if t < 10 ** -3:
-        return 'us'
-    if t < 1:
-        return 'ms'
-    if t < 10 ** 3:
-        return 's'
-    if t < 6 * 10 ** 4:
-        return 'min'
-    if t < 36 * 10 ** 5:
-        return 'h'
-
+    for names, _, limit in return_names():
+        if interval < limit:
+            return names[0]
     return 'd'
