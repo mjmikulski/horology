@@ -2,7 +2,7 @@
 
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/mjmikulski/horology.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/mjmikulski/horology/alerts/)
-[![Downloads](https://pepy.tech/badge/horology/week)](https://pepy.tech/project/horology/week)
+[![Downloads](https://pepy.tech/badge/horology/month)](https://pepy.tech/project/horology/month)
 [![PyPI version](https://badge.fury.io/py/horology.svg)](https://badge.fury.io/py/horology)
 
 [![CircleCI](https://circleci.com/gh/mjmikulski/horology/tree/master.svg?style=svg)](https://circleci.com/gh/mjmikulski/horology/tree/master)
@@ -14,7 +14,7 @@ Conveniently measures the time of your loops, contexts and functions.
 
 
 ## Instalation
-Simply enter:
+Simply:
 ```
 pip install horology
 ```
@@ -116,12 +116,8 @@ you can override this by setting the `unit` argument with one of these names:
 
 
 ## Contributions 
-1. Contributions are welcomed
-2. Make sure that all tests pass (both unittests and doctests), you can run them all with:
-```bash
-nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
-```
-3. If any questions, feel free to contact me.
+Contributions are welcomed, see [contribution guide](.github/contributing.md).
+
 
 
 ## Internals:
