@@ -19,7 +19,7 @@ Simply:
 pip install horology
 ```
 
-
+Tested with python 3.6, 3.7 and 3.8.
 
 ## Usage
 The following 3 tools will let you measure practically any part of your Python code.

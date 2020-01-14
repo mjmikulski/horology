@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='horology',
-      version='1.0.0',
+      version='1.1.0',
       author='Maciej J Mikulski',
       author_email='maciej.mikulski.jr@gmail.com',
       description='measure time conveniently',
