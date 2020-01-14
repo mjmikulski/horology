@@ -120,6 +120,6 @@ Contributions are welcomed, see [contribution guide](.github/contributing.md).
 
 
 
-## Internals:
+## Internals
 Horology internally measures time with `perf_counter` which provides the *highest available resolution,*
  see [docs](https://docs.python.org/3/library/time.html#time.perf_counter).

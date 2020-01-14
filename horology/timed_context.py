@@ -4,7 +4,9 @@ from horology.tformatter import rescale_time
 
 
 class Timing:
-    """ Example:
+    """ Timing context
+
+    # Example
     >>> with Timing('sleeping: ', unit='ms') as t:
     ...    sleep(0.25)
     sleeping: 2... ms
@@ -21,7 +23,7 @@ class Timing:
     @property
     def interval(self):
         """ Time elapsed in seconds
-        If still in the context, returns time elapsed form the moment of entering to the context.
+        If still in the context, returns time elapsed from the moment of entering to the context.
         If the context has been already left, returns the time spent in the context.
         """
         if self._interval:  # when context exited

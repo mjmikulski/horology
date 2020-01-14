@@ -31,6 +31,9 @@ class TformatterTest(unittest.TestCase):
         t, u = rescale_time(6000, unit='AUTO')
         self.assertEqual((t, u), (100, 'min'))
 
+    def test_value_error(self):
+        self.assertRaises(ValueError, rescale_time, 0.5, unit='dupa')
+
 
 if __name__ == '__main__':
     unittest.main()

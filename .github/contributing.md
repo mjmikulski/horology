@@ -9,8 +9,8 @@ I am happy that you think about contributing to this project. This is a good ide
 4. Create documentation.
 5. Promote horology :heartpulse:
 
-## How to report a bug?
-Create an issue using bug template.
+## How to report a bug or propose a new amazing feature?
+Create an issue. 
 
 ## How to commit some code?
 1. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) horology.
@@ -25,6 +25,8 @@ nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 from your fork to horology.
 7. Wait for my feedback.
 
+## How to write some documentation?
+Follow keras style. Use grammarly. 
 
 ## Commit messages
 Follow the rules when writing a commit message:
@@ -34,8 +36,8 @@ Follow the rules when writing a commit message:
 - limit the first line to 72 characters,
 - separate the first line from the body with one blank line.
 
-adopted from [here](https://chris.beams.io/posts/git-commit#seven-rules)
+_adopted from [here](https://chris.beams.io/posts/git-commit#seven-rules)._
 
 
 ## I am open
-Feel free to contact me in case of doubts.
+Feel free to contact. My email starts with `maciej.mikulski.jr` and ends with `gmail.com`.
