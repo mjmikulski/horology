@@ -108,6 +108,23 @@ make_use_of(t.interval)
 ```
 
 
+#### Easily test x iterations for a particular function.
+```python
+from time import sleep
+from random import random
+from timed_decorator import timed
+
+@timed(unit='s', iterations=10)
+def run():
+    sleep(random())
+run()
+```
+```
+Result:
+```
+run: 1.00 s in 10 iterations :: Average time per loop = 0.10 s
+```
+
 ## Time units
 Time units are by default automatically adjusted, for example you will see
 `foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, 
@@ -117,7 +134,6 @@ you can override this by setting the `unit` argument with one of these names:
 
 ## Contributions 
 Contributions are welcomed, see [contribution guide](.github/contributing.md).
-
 
 
 ## Internals
