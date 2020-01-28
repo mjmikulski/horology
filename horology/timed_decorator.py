@@ -19,7 +19,7 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, iterations
                 if name is None:
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{name}{t:.2f} {u}'
+                print_str = f'{name} {t:.2f} {u}'
                 if iterations > 1:
                     print_str +=  f" in {iterations} iterations :: Average time per loop = {t/iterations:.2f} {u}"
                 print_fn(print_str)

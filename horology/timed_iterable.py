@@ -9,8 +9,8 @@ class Timed:
     def __init__(self, iterable: Iterable, *, unit='a', iteration_print_fn=print, summary_print_fn=print):
         self.iterable = iterable
         self.unit = unit
-        self.iteration_print_fn = iteration_print_fn if iteration_print_fn else lambda _: None
-        self.summary_print_fn = summary_print_fn if summary_print_fn else lambda _: None
+        self.iteration_print_fn = iteration_print_fn if iteration_print_fn else None
+        self.summary_print_fn = summary_print_fn if summary_print_fn else  None
 
         self.intervals = []
         self._start = None
@@ -47,7 +47,7 @@ class Timed:
         return self._last - self._start
 
     def print_summary(self):
-        # leave an empty line if iterations and summary are printed to the same output
+        # leave an empty line if iterations and summary are printed to the same output.
         print_str = "\n" if self.iteration_print_fn == self.summary_print_fn else ""
 
         if self.n == 0:

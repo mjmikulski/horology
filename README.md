@@ -108,7 +108,7 @@ make_use_of(t.interval)
 ```
 
 
-#### Easily test x iterations for a particular function.
+#### Easily test x iterations for a particular function using the `@timed` decorator.
 ```python
 from time import sleep
 from random import random
@@ -122,7 +122,28 @@ run()
 ```
 Result:
 ```
+```
 run: 1.00 s in 10 iterations :: Average time per loop = 0.10 s
+```
+
+#### This can also be logged as required:
+``` python
+@timed(unit='s', name='Heavy Process One', iterations=10, print_fn=logger.info)
+def run_heavy_process_one():
+    sleep(random())
+run_heavy_process_one()
+
+@timed(unit='s', name='Heavy Process Two', iterations=10, print_fn=logger.info)
+def run_heavy_process_two():
+    sleep(random())
+run_heavy_process_two()
+```
+```
+Log:
+```
+```
+[INFO] -- Heavy Process One 3.81 s in 10 iterations :: Average time per loop = 0.38 s
+[INFO] -- Heavy Process Two 5.48 s in 10 iterations :: Average time per loop = 0.55 s
 ```
 
 ## Time units

@@ -1,0 +1,9 @@
+[INFO] -- Heavy Process One 3.81 s in 10 iterations :: Average time per loop = 0.38 s
+[INFO] -- Heavy Process Two 5.48 s in 10 iterations :: Average time per loop = 0.55 s
+[INFO] -- iteration    1: 0.96 ms
+[INFO] -- iteration    2: 1.17 ms
+[INFO] -- iteration    3: 1.32 ms
+[INFO] -- 
+total 3 iterations in 0.00 ms
+min/median/max: 0.96/1.17/1.32 ms
+average (std): 1.15 (0.18) ms
