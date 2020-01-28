@@ -16,9 +16,7 @@ class Timed:
         self._start = None
         self._last = None
 
-        self.decimal_precision = decimal_precision 
-        if not isinstance(decimal_precision, int):
-            self.decimal_precision = 2
+        self.decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision
 
     def __iter__(self):
         self._start = counter()

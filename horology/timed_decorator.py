@@ -6,8 +6,7 @@ from horology.tformatter import rescale_time
 
 
 def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, iterations=1, decimal_precision=2):
-    if not isinstance(decimal_precision, int):
-        decimal_precision = 2
+    decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision
 
     def decorator(_f):
         @wraps(_f)
