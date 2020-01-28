@@ -7,3 +7,100 @@
 total 3 iterations in 0.00 ms
 min/median/max: 0.96/1.17/1.32 ms
 average (std): 1.15 (0.18) ms
+[INFO] -- Heavy Process One 7.05 s in 10 iterations :: Average time per loop = 0.71 s
+[INFO] -- Heavy Process Two 6.19 s in 10 iterations :: Average time per loop = 0.62 s
+[INFO] -- iteration    1: 1.26 ms
+[INFO] -- iteration    2: 17.90 ms
+[INFO] -- iteration    3: 0.77 ms
+[INFO] -- 
+total 3 iterations in 0.02 ms
+min/median/max: 0.77/1.26/17.90 ms
+average (std): 6.64 (9.75) ms
+[INFO] -- Heavy Process One 4.90 s in 10 iterations :: Average time per loop = 0.49 s
+[INFO] -- Heavy Process Two 5.02 s in 10 iterations :: Average time per loop = 0.50 s
+[INFO] -- Heavy Process One 0.75 s in 2 iterations :: Average time per loop = 0.38 s
+[INFO] -- Heavy Process Two 1.82 s in 2 iterations :: Average time per loop = 0.91 s
+[INFO] -- iteration    1: 1.15 ms
+[INFO] -- iteration    2: 1.14 ms
+[INFO] -- iteration    3: 1.24 ms
+[INFO] -- 
+total 3 iterations in 0.00 ms
+min/median/max: 1.14/1.15/1.24 ms
+average (std): 1.18 (0.05) ms
+[INFO] -- Heavy Process One 1.57 s in 2 iterations :: Average time per loop = 0.79 s
+[INFO] -- Heavy Process Two 0.86 s in 2 iterations :: Average time per loop = 0.43 s
+[INFO] -- Heavy Process One 1.31 s in 2 iterations :: Average time per loop = 0.65 s
+[INFO] -- Heavy Process Two 0.66 s in 2 iterations :: Average time per loop = 0.33 s
+[INFO] -- Heavy Process One 1.20 s in 2 iterations :: Average time per loop = 0.60 s
+[INFO] -- Heavy Process Two 1.08 s in 2 iterations :: Average time per loop = 0.54 s
+[INFO] -- Heavy Process One 1.19 s in 2 iterations :: Average time per loop = 0.59 s
+[INFO] -- Heavy Process Two 0.98 s in 2 iterations :: Average time per loop = 0.49 s
+[INFO] -- Heavy Process One 1.30 s in 2 iterations :: Average time per loop = 0.65 s
+[INFO] -- Heavy Process Two 1.16 s in 2 iterations :: Average time per loop = 0.58 s
+[INFO] -- Heavy Process One 0.7669 s in 2 iterations :: Average time per loop = 0.3834 s
+[INFO] -- Heavy Process Two 0.61 s in 2 iterations :: Average time per loop = 0.31 s
+[INFO] -- Heavy Process One 1.2297372 s in 2 iterations :: Average time per loop = 0.6148686 s
+[INFO] -- Heavy Process Two 0.66 s in 2 iterations :: Average time per loop = 0.33 s
+[INFO] -- Heavy Process One 0.90009110000000003282139005023054778575897216796875 s in 2 iterations :: Average time per loop = 0.450045550000000016410695025115273892879486083984375 s
+[INFO] -- Heavy Process Two 0.87 s in 2 iterations :: Average time per loop = 0.44 s
+[INFO] -- Heavy Process One 1.2118235 s in 2 iterations :: Average time per loop = 0.60591175 s
+[INFO] -- Heavy Process Two 0.59 s in 2 iterations :: Average time per loop = 0.29 s
+[INFO] -- Heavy Process One 0.3584113 s in 2 iterations :: Average time per loop = 0.17920565 s
+[INFO] -- Heavy Process Two 0.56 s in 2 iterations :: Average time per loop = 0.28 s
+[INFO] -- Heavy Process One 1.7953207 s in 2 iterations :: Average time per loop = 0.89766035 s
+[INFO] -- Heavy Process Two 1.2 s in 2 iterations :: Average time per loop = 0.59 s
+[INFO] -- Heavy Process One 1.076424 s in 2 iterations :: Average time per loop = 0.538212 s
+[INFO] -- Heavy Process Two 1.1 s in 2 iterations :: Average time per loop = 0.56 s
+[INFO] -- Heavy Process One 1.3435098 s in 2 iterations :: Average time per loop = 0.6717549 s
+[INFO] -- Heavy Process Two 0.42 s in 2 iterations :: Average time per loop = 0.21 s
+[INFO] -- Heavy Process One 1.5600167 s in 2 iterations :: Average time per loop = 0.78000835 s
+[INFO] -- Heavy Process One 0.9750845 s in 2 iterations :: Average time per loop = 0.48754225 s
+[INFO] -- Heavy Process One 0.8334426 s in 2 iterations :: Average time per loop = 0.4167213 s
+[INFO] -- Heavy Process One 0.8809407 s in 2 iterations :: Average time per loop = 0.44047035 s
+[INFO] -- Heavy Process One 0.5877797 s in 2 iterations :: Average time per loop = 0.29388985 s
+[INFO] -- Heavy Process One 0.42367509999999997 s in 2 iterations :: Average time per loop = 0.21183754999999999 s
+[INFO] -- Heavy Process One       1.3951054 s in 2 iterations :: Average time per loop =       0.6975527 s
+[INFO] -- Heavy Process One       1.2014163 s in 2 iterations :: Average time per loop =      0.60070815 s
+[INFO] -- Heavy Process One 0.24808639999999998 s in 2 iterations :: Average time per loop = 0.12404319999999999 s
+[INFO] -- Heavy Process One       1.1604405 s in 2 iterations :: Average time per loop =      0.58022025 s
+[INFO] -- Heavy Process One       0.5459985 s in 2 iterations :: Average time per loop =      0.27299925 s
+[INFO] -- Heavy Process One       0.6670188 s in 2 iterations :: Average time per loop =       0.3335094 s
+[INFO] -- Heavy Process One       0.7966303 s in 2 iterations :: Average time per loop =      0.39831515 s
+[INFO] -- Heavy Process One       1.0357752 s in 2 iterations :: Average time per loop =       0.5178876 s
+[INFO] -- Heavy Process One       0.9709236 s in 2 iterations :: Average time per loop =       0.4854618 s
+[INFO] -- Heavy Process One       1.4200458 s in 2 iterations :: Average time per loop =       0.7100229 s
+[INFO] -- Heavy Process One       1.0576193 s in 2 iterations :: Average time per loop =      0.52880965 s
+[INFO] -- Heavy Process One       1.3955425 s in 2 iterations :: Average time per loop =      0.69777125 s
+[INFO] -- Heavy Process One 0.9156329000000001 s in 2 iterations :: Average time per loop = 0.45781645000000004 s
+[INFO] -- Heavy Process One       0.8192125 s in 2 iterations :: Average time per loop =      0.40960625 s
+[INFO] -- Heavy Process One        0.950446 s in 2 iterations :: Average time per loop =        0.475223 s
+[INFO] -- Heavy Process One       1.0146192 s in 2 iterations :: Average time per loop =       0.5073096 s
+[INFO] -- Heavy Process One       0.8811369 s in 2 iterations :: Average time per loop =      0.44056845 s
+[INFO] -- Heavy Process One       1.7228532 s in 2 iterations :: Average time per loop =       0.8614266 s
+[INFO] -- Heavy Process One       1.2308279 s in 2 iterations :: Average time per loop =      0.61541395 s
+[INFO] -- Heavy Process One 1.4311479:15 s in 2 iterations :: Average time per loop = 0.71557395:15 s
+[INFO] -- Heavy Process One 1.620393200000000 s in 2 iterations :: Average time per loop = 0.810196600000000 s
+[INFO] -- Heavy Process One 0.1523300000 s in 2 iterations :: Average time per loop = 0.0761650000 s
+[INFO] -- Heavy Process One 1.1293941999999999037385123301646672189235687255859375000000000000000000000000000000000000000000000000 s in 2 iterations :: Average time per loop = 0.5646970999999999518692561650823336094617843627929687500000000000000000000000000000000000000000000000 s
+[INFO] -- Heavy Process One 0.9015589000000000519108311891613993793725967407226562500000000000000000000000000000000000000000000000 s in 2 iterations :: Average time per loop = 0.4507794500000000259554155945806996896862983703613281250000000000000000000000000000000000000000000000 s
+[INFO] -- Heavy Process One 0.1065327999999999969427122437082289252430200576782226562500000000000000000000000000000000000000000000 s in 2 iterations :: Average time per loop = 0.0532663999999999984713561218541144626215100288391113281250000000000000000000000000000000000000000000 s
+[INFO] -- Heavy Process One 1.0188 s in 2 iterations :: Average time per loop = 0.5094 s
+[INFO] -- Heavy Process One 1.2238 s in 2 iterations :: Average time per loop = 0.6119 s
+[INFO] -- Heavy Process One 1.1480 s in 2 iterations :: Average time per loop = 0.5740 s
+[INFO] -- Heavy Process One 1.2082 s in 2 iterations :: Average time per loop = 0.6041 s
+[INFO] -- Heavy Process One 0.6984 s in 2 iterations :: Average time per loop = 0.3492 s
+[INFO] -- Heavy Process One 0.5942 s in 2 iterations :: Average time per loop = 0.2971 s
+[INFO] -- Heavy Process One 0.7091 s in 2 iterations :: Average time per loop = 0.3545 s
+[INFO] -- Heavy Process One 1.5145 s in 2 iterations :: Average time per loop = 0.7573 s
+[INFO] -- Heavy Process One 1.0479 s in 2 iterations :: Average time per loop = 0.5240 s
+[INFO] -- Heavy Process One 1.6772 s in 2 iterations :: Average time per loop = 0.8386 s
+[INFO] -- Heavy Process One 0.7512 s in 2 iterations :: Average time per loop = 0.3756 s
+[INFO] -- Heavy Process One 1.2150 s in 2 iterations :: Average time per loop = 0.6075 s
+[INFO] -- Heavy Process One 1.3130 s in 2 iterations :: Average time per loop = 0.6565 s
+[INFO] -- Heavy Process One 1.7586 s in 2 iterations :: Average time per loop = 0.8793 s
+[INFO] -- Heavy Process One 0.6429 s in 2 iterations :: Average time per loop = 0.3215 s
+[INFO] -- Heavy Process One 0.9538 s in 2 iterations :: Average time per loop = 0.4769 s
+[INFO] -- Heavy Process One 1.1701 s in 2 iterations :: Average time per loop = 0.5850 s
+[INFO] -- Heavy Process One0.2825 s in 2 iterations :: Average time per loop = 0.1413 s
+[INFO] -- Heavy Process One1.4290 s in 2 iterations :: Average time per loop = 0.7145 s
+[INFO] -- Heavy Process One0.7470 s in 2 iterations :: Average time per loop = 0.3735 s

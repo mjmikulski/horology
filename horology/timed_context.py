@@ -12,7 +12,7 @@ class Timing:
     sleeping: 2... ms
     """
 
-    def __init__(self, name=None, *, unit='a', print_fn=print):
+    def __init__(self, name=None, *, unit='a', print_fn=print, decimal_precision=2):
         self.name = name if name else ""
         self.unit = unit
         self._print_fn = print_fn if print_fn else lambda _: None
@@ -20,7 +20,11 @@ class Timing:
         self._start = None
         self._interval = None
 
-    @property
+        self.decimal_precision = decimal_precision 
+        if not isinstance(decimal_precision, int):
+            self.decimal_precision = 2
+
+    @property 
     def interval(self):
         """ Time elapsed in seconds
         If still in the context, returns time elapsed from the moment of entering to the context.
@@ -38,7 +42,7 @@ class Timing:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.2f} {u}"
+        print_str = f"{self.name}{t:.{self.decimal_precision}f} {u}"
         self._print_fn(print_str)
 
 
