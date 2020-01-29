@@ -20,7 +20,7 @@ class Timing:
         self._start = None
         self._interval = None
 
-        self.decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision 
+        self.dp = 2 if not isinstance(decimal_precision, int) else decimal_precision 
 
     @property 
     def interval(self):
@@ -40,7 +40,7 @@ class Timing:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.{self.decimal_precision}f} {u}"
+        print_str = f"{self.name}{t:.{self.dp}f} {u}"
         self._print_fn(print_str)
 
 

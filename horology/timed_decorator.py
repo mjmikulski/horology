@@ -6,8 +6,6 @@ from horology.tformatter import rescale_time
 
 
 def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, iterations=1, decimal_precision=2):
-    decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision
-
     def decorator(_f):
         @wraps(_f)
         def wrapped(*args, **kwargs):
@@ -21,13 +19,15 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, iterations
                 if name is None:
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
+                
+                dp = 2 if not isinstance(decimal_precision, int) else decimal_precision
 
                 average = t/iterations
-                wrapped.average = float(f'{average:.{decimal_precision}f}')
+                wrapped.average = float(f'{average:.{dp}f}')
 
-                print_str = f'{name}{t:.{decimal_precision}f} {u}'
+                print_str = f'{name}{t:.{dp}f} {u}'
                 if iterations > 1:                    
-                    print_str +=  f" in {iterations} iterations :: Average time per loop = {average:.{decimal_precision}f} {u}"
+                    print_str +=  f" in {iterations} iterations :: Average time per loop = {average:.{dp}f} {u}"
                 print_fn(print_str)
             return return_value
         return wrapped
