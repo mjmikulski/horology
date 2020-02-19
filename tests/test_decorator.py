@@ -87,6 +87,7 @@ class TimedDecoratorTest(unittest.TestCase):
 
         t = run.interval
         self.assertAlmostEqual(t, 1, delta=0.04)
+        self.assertEqual(run.timed_float, round(run.timed_float, 4))
 
     def test_no_decimal_precision(self):
         @timed(unit='s', decimal_precision=None)
@@ -95,7 +96,8 @@ class TimedDecoratorTest(unittest.TestCase):
         run()
 
         t = run.interval
-        self.assertAlmostEqual(t, 1, delta=0.02)        
+        self.assertAlmostEqual(t, 1, delta=0.02)      
+        self.assertEqual(run.timed_float, round(run.timed_float, 2))  
   
 
 if __name__ == '__main__':

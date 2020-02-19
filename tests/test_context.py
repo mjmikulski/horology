@@ -57,6 +57,7 @@ class TimedContextTest(unittest.TestCase):
             self.assertAlmostEqual(t.interval, 0.15, delta=0.04)
 
             sleep(0.15)
+            
 
         # check after the context was exited
         self.assertAlmostEqual(t.interval, 0.3, delta=0.04)
@@ -64,6 +65,10 @@ class TimedContextTest(unittest.TestCase):
         # make sure timing was stopped after the context was exited
         sleep(0.15)
         self.assertAlmostEqual(t.interval, 0.3, delta=0.04)
+
+        # Check decimal precision is correct
+        self.assertEqual(t.timed_float, round(t.timed_float, 4))
+        
 
     def test_no_decimal_precision(self):
         with Timing(print_fn=None, unit='ms', decimal_precision=None) as t:
@@ -74,7 +79,7 @@ class TimedContextTest(unittest.TestCase):
             sleep(0.15)
             self.assertAlmostEqual(t.interval, 0.15, delta=0.02)
 
-            sleep(0.15)
+            sleep(0.15)           
 
         # check after the context was exited
         self.assertAlmostEqual(t.interval, 0.3, delta=0.02)
@@ -83,6 +88,8 @@ class TimedContextTest(unittest.TestCase):
         sleep(0.15)
         self.assertAlmostEqual(t.interval, 0.3, delta=0.02)
 
-
+         # Check decimal precision is correct
+        self.assertEqual(t.timed_float, round(t.timed_float, 2))
+        
 if __name__ == '__main__':
     unittest.main()

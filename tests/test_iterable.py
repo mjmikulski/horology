@@ -103,12 +103,14 @@ class TimedIterableTest(unittest.TestCase):
         T = Timed(['cat', 'dog', 'parrot'], decimal_precision=4)
         for a in T:
             sleep(0.15)
+        self.assertEqual(T.total, round(T.total, 4))
         self.assertAlmostEqual(T.total, 0.45, delta=0.04)
 
     def test_no_decimal_precision(self):
         T = Timed(['cat', 'dog', 'parrot'], decimal_precision=None)
         for a in T:
             sleep(0.15)
+        self.assertEqual(T.total, round(T.total, 2))
         self.assertAlmostEqual(T.total, 0.45, delta=0.04)
 
 if __name__ == '__main__':

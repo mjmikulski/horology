@@ -17,13 +17,17 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, decimal_pr
                 nonlocal name
                 if name is None:
                     name = _f.__name__ + ': '
-                t, u = rescale_time(interval, unit=unit)              
+                t, u = rescale_time(interval, unit=unit)    
+
                 if not isinstance(decimal_precision, int):
                     dp = 2
                 else:
                     dp = decimal_precision
+
                 print_str = f'{name}{t:.{dp}f} {u}'
                 print_fn(print_str)
+                wrapped.timed_float = float(f'{t:.{dp}f}')
+
             return return_value
         return wrapped
     if f is None:

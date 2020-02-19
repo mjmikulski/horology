@@ -20,7 +20,9 @@ class Timing:
         self._start = None
         self._interval = None
 
-        self.dp = 2 if not isinstance(decimal_precision, int) else decimal_precision 
+        self.timed_float = None
+
+        self.dp = 2 if not isinstance(decimal_precision, int) else decimal_precision
 
     @property 
     def interval(self):
@@ -43,8 +45,9 @@ class Timing:
         print_str = f"{self.name}{t:.{self.dp}f} {u}"
         self._print_fn(print_str)
 
+        self.timed_float = float(f'{t:.{self.dp}f}')
+
 
 if __name__ == '__main__':
     import doctest
-
     doctest.testmod(optionflags=doctest.ELLIPSIS)

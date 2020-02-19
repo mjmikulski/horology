@@ -113,12 +113,17 @@ make_use_of(t.interval)
 for x in Timed(animals, unit='s', decimal_precision=4):
     ...
 
-with Timing(unit='s', decimal_precision=4):
+with Timing(unit='s', decimal_precision=4) as t:
     ...
+
+>>> t.timed_float
+>>> 1.1234
 
 @timed(unit='s', decimal_precision=4)
 def run_heavy_process_one():
     ...
+>>> run.timed_float
+>>> 1.1234
 ```
 
 
