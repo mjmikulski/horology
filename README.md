@@ -146,19 +146,6 @@ Log:
 [INFO] -- Heavy Process Two 5.48 s in 10 iterations :: Average time per loop = 0.55 s
 ```
 
-#### Specify the Decimal Precision of the output:
-```python
-for x in Timed(animals, unit='s', decimal_precision=4):
-    ...
-
-with Timing(unit='s', decimal_precision=4):
-    ...
-
-@timed(unit='s', decimal_precision=4)
-def run_heavy_process_one():
-    ...
-```
-
 
 ## Time units
 Time units are by default automatically adjusted, for example you will see

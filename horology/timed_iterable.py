@@ -6,7 +6,7 @@ from horology.tformatter import rescale_time
 
 
 class Timed:
-    def __init__(self, iterable: Iterable, *, unit='a', iteration_print_fn=print, summary_print_fn=print, decimal_precision=2):
+    def __init__(self, iterable: Iterable, *, unit='a', iteration_print_fn=print, summary_print_fn=print):
         self.iterable = iterable
         self.unit = unit
         self.iteration_print_fn = iteration_print_fn if iteration_print_fn else lambda _: None
@@ -15,8 +15,6 @@ class Timed:
         self.intervals = []
         self._start = None
         self._last = None
-
-        self.dp = 2 if not isinstance(decimal_precision, int) else decimal_precision
 
     def __iter__(self):
         self._start = counter()
@@ -30,7 +28,7 @@ class Timed:
                 interval = now - self._last
                 self.intervals.append(interval)
                 t, u = rescale_time(interval, self.unit)
-                self.iteration_print_fn(f"iteration {self.n:4}: {t:.{self.dp}f} {u}")
+                self.iteration_print_fn(f"iteration {self.n:4}: {t:.2f} {u}")
 
             self._last = now
 
@@ -46,17 +44,17 @@ class Timed:
 
     @property
     def total(self):
-        return float(f'{self._last - self._start:.{self.dp}f}')
+        return self._last - self._start
 
     def print_summary(self):
-        # leave an empty line if iterations and summary are printed to the same output.
+        # leave an empty line if iterations and summary are printed to the same output
         print_str = "\n" if self.iteration_print_fn == self.summary_print_fn else ""
 
         if self.n == 0:
             print_str = "no iterations"
         elif self.n == 1:
             t, u = rescale_time(self.intervals[0], unit=self.unit)
-            print_str += f"one iteration: {t:.{self.dp}f} {u}"
+            print_str += f"one iteration: {t:.2f} {u}"
         else:
             t_total, u_total = rescale_time(self.total, self.unit)
 
@@ -66,13 +64,13 @@ class Timed:
             t_max, _ = rescale_time(max(self.intervals), u)
             t_std, _ = rescale_time(stdev(self.intervals), u)
 
-            print_str += f"total {self.n} iterations in {t_total:.{self.dp}f} {u_total}\n"
+            print_str += f"total {self.n} iterations in {t_total:.2f} {u_total}\n"
             print_str += f"min/median/max: " \
-                         f"{t_min:.{self.dp}f}" \
-                         f"/{t_median:.{self.dp}f}" \
-                         f"/{t_max:.{self.dp}f} {u}\n"
+                         f"{t_min:.2f}" \
+                         f"/{t_median:.2f}" \
+                         f"/{t_max:.2f} {u}\n"
             print_str += f"average (std): " \
-                         f"{t_mean:.{self.dp}f} " \
-                         f"({t_std:.{self.dp}f}) {u}"
+                         f"{t_mean:.2f} " \
+                         f"({t_std:.2f}) {u}"
 
         self.summary_print_fn(print_str)

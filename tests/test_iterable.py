@@ -99,17 +99,7 @@ class TimedIterableTest(unittest.TestCase):
         self.assertListEqual(lines, ['cat', 'dog', 'parrot'])
         self.assertAlmostEqual(T.total, 0.45, delta=0.05)
         
-    def test_decimal_precision(self):
-        T = Timed(['cat', 'dog', 'parrot'], decimal_precision=4)
-        for a in T:
-            sleep(0.15)
-        self.assertAlmostEqual(T.total, 0.45, delta=0.04)
-
-    def test_no_decimal_precision(self):
-        T = Timed(['cat', 'dog', 'parrot'], decimal_precision=None)
-        for a in T:
-            sleep(0.15)
-        self.assertAlmostEqual(T.total, 0.45, delta=0.02)
+ 
 
 if __name__ == '__main__':
     unittest.main()
