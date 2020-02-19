@@ -109,7 +109,7 @@ class TimedIterableTest(unittest.TestCase):
         T = Timed(['cat', 'dog', 'parrot'], decimal_precision=None)
         for a in T:
             sleep(0.15)
-        self.assertAlmostEqual(T.total, 0.45, delta=0.02)
+        self.assertAlmostEqual(T.total, 0.45, delta=0.04)
 
 if __name__ == '__main__':
     unittest.main()

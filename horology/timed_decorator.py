@@ -5,29 +5,24 @@ from typing import Callable
 from horology.tformatter import rescale_time
 
 
-def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, iterations=1, decimal_precision=2):
+def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, decimal_precision=2):
     def decorator(_f):
         @wraps(_f)
         def wrapped(*args, **kwargs):
             start = counter()            
-            for _ in range(iterations):
-                return_value = _f(*args, **kwargs)
+            return_value = _f(*args, **kwargs)
             interval = counter() - start
             wrapped.interval = interval
             if print_fn is not None:
                 nonlocal name
                 if name is None:
                     name = _f.__name__ + ': '
-                t, u = rescale_time(interval, unit=unit)
-                
-                dp = 2 if not isinstance(decimal_precision, int) else decimal_precision
-
-                average = t/iterations
-                wrapped.average = float(f'{average:.{dp}f}')
-
+                t, u = rescale_time(interval, unit=unit)              
+                if not isinstance(decimal_precision, int):
+                    dp = 2
+                else:
+                    dp = decimal_precision
                 print_str = f'{name}{t:.{dp}f} {u}'
-                if iterations > 1:                    
-                    print_str +=  f" in {iterations} iterations :: Average time per loop = {average:.{dp}f} {u}"
                 print_fn(print_str)
             return return_value
         return wrapped

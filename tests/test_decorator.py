@@ -79,18 +79,6 @@ class TimedDecoratorTest(unittest.TestCase):
 
         self.assertAlmostEqual(t, 0.15, delta=0.02)
 
-    def test_iterations(self):
-        from time import sleep
-        from random import random
-
-        @timed(unit='s', iterations=10)
-        def run():
-            sleep(0.1)
-        run()
-
-        t = run.interval
-        self.assertAlmostEqual(t, 1.004, delta=0.02)
-
     def test_decimal_precision(self):
         @timed(unit='s', decimal_precision=4)
         def run():
@@ -108,15 +96,7 @@ class TimedDecoratorTest(unittest.TestCase):
 
         t = run.interval
         self.assertAlmostEqual(t, 1, delta=0.02)        
-
-    def test_access_average_variable(self):
-        @timed(unit='s', iterations=10)
-        def run():
-            sleep(0.1)
-        run()
-
-        t = run.average
-        self.assertAlmostEqual(t, 0.1, delta=0.02)      
+  
 
 if __name__ == '__main__':
     unittest.main()
