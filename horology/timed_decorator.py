@@ -19,11 +19,11 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, decimal_pr
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
 
-                decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision
+                dp = 2 if not isinstance(decimal_precision, int) else decimal_precision
                     
-                print_str = f'{name}{t:.{decimal_precision}f} {u}'
+                print_str = f'{name}{t:.{dp}f} {u}'
                 print_fn(print_str)
-                wrapped.timed_float = float(f'{t:.{decimal_precision}f}')
+                wrapped.timed_float = float(f'{t:.{dp}f}')
 
             return return_value
         return wrapped

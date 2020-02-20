@@ -96,7 +96,7 @@ class TimedDecoratorTest(unittest.TestCase):
         run()
 
         t = run.interval
-        self.assertAlmostEqual(t, 1, delta=0.02)      
+        self.assertAlmostEqual(t, 1, delta=0.02)
         self.assertEqual(run.timed_float, round(run.timed_float, 2))  
   
 
