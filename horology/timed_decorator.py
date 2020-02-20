@@ -19,7 +19,6 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print, decimal_pr
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
 
-                nonlocal decimal_precision
                 decimal_precision = 2 if not isinstance(decimal_precision, int) else decimal_precision
                     
                 print_str = f'{name}{t:.{decimal_precision}f} {u}'

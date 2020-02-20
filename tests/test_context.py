@@ -88,7 +88,7 @@ class TimedContextTest(unittest.TestCase):
         sleep(0.15)
         self.assertAlmostEqual(t.interval, 0.3, delta=0.02)
 
-         # Check decimal precision is correct
+        # Check decimal precision is correct
         self.assertEqual(t.timed_float, round(t.timed_float, 2))
         
 if __name__ == '__main__':
