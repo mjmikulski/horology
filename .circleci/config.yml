@@ -44,3 +44,4 @@ workflows:
       - build_36
       - build_37
       - build_38
+      - build_39
