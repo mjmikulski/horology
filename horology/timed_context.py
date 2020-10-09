@@ -1,15 +1,44 @@
-from time import perf_counter as counter, sleep
+from time import perf_counter as counter
 
 from horology.tformatter import rescale_time
 
 
 class Timing:
-    """ Timing context
+    """ Context that measures time elapsed from entering to the exit
 
-    # Example
-    >>> with Timing('sleeping: ', unit='ms') as t:
-    ...    sleep(0.25)
-    sleeping: 2... ms
+    Parameters
+    ----------
+    name: str, optional
+        String that should be printed before time elapsed,
+        e.g.: 'Doing x: '
+    unit: str, optional
+        Time unit used to print elapsed time. Possible values:
+         ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
+         for automatic time adjustment (default).
+    print_fn: Callable or None, optional
+        Function that is called to print the time elapsed in the
+        context. Use `None` to disable printing anything. You can
+        provide e.g. `logger.info`. By default the built-in `print`
+        function is used.
+
+    Attributes
+    ----------
+    interval: float
+        Time elapsed inside the context in seconds. See details in the
+        doc string of the property.
+
+    Examples
+    --------
+    Basic usage
+        ```
+        from horology import Timing
+        with Timing(name='Important calculations: '):
+            do_a_lot()
+        ```
+        Possible result:
+        ```
+        Important calculations: 12.43 s
+        ```
     """
 
     def __init__(self, name=None, *, unit='a', print_fn=print):
@@ -23,8 +52,11 @@ class Timing:
     @property
     def interval(self):
         """ Time elapsed in seconds
-        If still in the context, returns time elapsed from the moment of entering to the context.
-        If the context has been already left, returns the time spent in the context.
+
+        If still in the context, returns time elapsed from the moment
+        of entering to the context. If the context has been already
+        left, returns the time spent in the context.
+
         """
         if self._interval:  # when context exited
             return self._interval
@@ -40,9 +72,3 @@ class Timing:
         t, u = rescale_time(self.interval, self.unit)
         print_str = f"{self.name}{t:.2f} {u}"
         self._print_fn(print_str)
-
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod(optionflags=doctest.ELLIPSIS)
