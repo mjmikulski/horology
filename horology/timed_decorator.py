@@ -14,18 +14,8 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
         The function which execution time should be measured.
     name: str or None, optional
         String that should be printed as the function name. By default
-        the f.__name__ proceeded by a colon and space is used, like this:
-        ```
-        @timed
-        def foo():
-            pass
-        foo() # prints 'foo: 5.12 ms'
-
-        @timed(name='bar elapsed ')
-        def bar():
-            pass
-        bar() # prints 'bar elapsed 2.56 ms'
-        ```
+        the f.__name__ proceeded by a colon and space is used. See
+        examples below.
     unit: str, optional
         Time unit used to print elapsed time. Possible values:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
@@ -35,10 +25,51 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
         disable printing anything. You can provide e.g. `logger.info`.
         By default the built-in `print` function is used.
 
+    Attributes
+    ----------
+    interval: float
+        Time elapsed by the function in seconds. Can be used to get the
+        time programmatically after the execution of f.
+
     Returns
     -------
     Decorated function.
 
+    Examples
+    --------
+    Basic usage
+        ```
+        @timed
+        def foo():
+            ...
+        foo() # prints 'foo: 5.12 ms'
+        ```
+
+    Change default name
+        ```
+        @timed(name='bar elapsed ')
+        def bar():
+            ...
+        bar() # prints 'bar elapsed 2.56 ms'
+        ```
+
+    Change default units
+        ```
+        @timed(unit='ns')
+        def baz():
+            ...
+        baz() # prints 'baz: 32768.15 ns'
+        ```
+
+    Suppress printing and use the attribute `interval` to get the time
+    elapsed
+        ```
+        @timed(print_fn=None)
+        def qux():
+            ...
+        qux() # prints nothing
+        print(qux.interval)
+        ```
     """
 
     def decorator(_f):
@@ -56,6 +87,7 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
                 t, u = rescale_time(interval, unit=unit)
                 print_str = f'{name}{t:.2f} {u}'
                 print_fn(print_str)
+
             return return_value
 
         return wrapped
