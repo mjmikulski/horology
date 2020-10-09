@@ -11,11 +11,11 @@ class Timed:
     Parameters
     ----------
     iterable: Iterable
-        Object that should we wrapped
+        Object that should we wrapped.
     unit: str, optional
-        Time unit sed to print elapsed time. Possible values:
+        Time unit used to print elapsed time. Possible values:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
-         for automatic time adjustment (default)
+         for automatic time adjustment (default).
     iteration_print_fn: Callable, optional
         Function that is called after each iteration to print time
         of that iteration. Use `None` to disable printing after each
