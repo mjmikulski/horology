@@ -27,6 +27,15 @@ jobs:
       - run: pip install --user nose
       - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 
+  build_39:
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - run: python --version
+      - checkout
+      - run: pip install --user nose
+      - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
+
 
 workflows:
   version: 2
