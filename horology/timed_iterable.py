@@ -82,7 +82,7 @@ class Timed:
                 interval = now - self._last
                 self.intervals.append(interval)
                 t, u = rescale_time(interval, self.unit)
-                self.iteration_print_fn(f"iteration {self.n:4}: {t:.2f} {u}")
+                self.iteration_print_fn(f"iteration {self.num_iterations:4}: {t:.2f} {u}")
 
             self._last = now
 
@@ -113,16 +113,16 @@ class Timed:
         Use `summary_print_fn` argument in the constructor to control
         if and where the summary is printed.
         """
-        # leave an empty line if iterations and summary are printed to
-        # the same output
+        # Leave an empty line if iterations and summary are printed to
+        # the same output.
         if self.iteration_print_fn == self.summary_print_fn:
             print_str = "\n"
         else:
             print_str = ""
 
-        if self.n == 0:
+        if self.num_iterations == 0:
             print_str = "no iterations"
-        elif self.n == 1:
+        elif self.num_iterations == 1:
             t, u = rescale_time(self.intervals[0], unit=self.unit)
             print_str += f"one iteration: {t:.2f} {u}"
         else:
@@ -134,14 +134,14 @@ class Timed:
             t_max, _ = rescale_time(max(self.intervals), u)
             t_std, _ = rescale_time(stdev(self.intervals), u)
 
-            print_str += f"total {self.n} iterations "
+            print_str += f"total {self.num_iterations} iterations "
             print_str += f"in {t_total:.2f} {u_total}\n"
             print_str += f"min/median/max: " \
-                         f"{t_min:.2f}" \
-                         f"/{t_median:.2f}" \
-                         f"/{t_max:.2f} {u}\n"
+                         f"{t_min:.3g}" \
+                         f"/{t_median:.3g}" \
+                         f"/{t_max:.3g} {u}\n"
             print_str += f"average (std): " \
-                         f"{t_mean:.2f} " \
-                         f"({t_std:.2f}) {u}"
+                         f"{t_mean:.3g} " \
+                         f"({t_std:.3g}) {u}"
 
         self.summary_print_fn(print_str)
