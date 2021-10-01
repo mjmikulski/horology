@@ -13,13 +13,13 @@ Conveniently measures the time of your loops, contexts and functions.
 
 
 
-## Instalation
+## Installation
 Simply:
 ```
 pip install horology
 ```
 
-Tested with python 3.6, 3.7 and 3.8.
+Works with python versions 3.6, 3.7, 3.8 and 3.9. Tested on Linux, Windows and MacOS.
 
 ## Usage
 The following 3 tools will let you measure practically any part of your Python code.
@@ -28,6 +28,7 @@ The following 3 tools will let you measure practically any part of your Python c
 #### Quick example
 ```python
 from horology import Timed
+
 animals = ['cat', 'dog', 'crocodile']
 
 for x in Timed(animals):
@@ -35,13 +36,13 @@ for x in Timed(animals):
 ```
 Result:
 ```
-iteration    1: 12.00 s
+iteration    1: 12.0 s
 iteration    2: 8.00 s
-iteration    3: 100.00 s
+iteration    3: 100 s
 
-total 3 iterations in 120.00 s
-min/median/max: 8.00/12.00/100.00 s
-average (std): 40.00 (52.00) s
+total 3 iterations in 120 s
+min/median/max: 8.00/12.0/100 s
+average (std): 40.0 (52.0) s
 
 ```
 
@@ -62,7 +63,7 @@ from horology import timed
 
 @timed
 def foo():
-    pass
+    ...
 ```
 Result:
 ```
@@ -75,12 +76,12 @@ Personalize time unit and name
 ```python
 @timed(unit='s', name='Processing took ')
 def bar():
-    pass
+    ...
 ```
 Result:
 ```
 >>> bar()
-Processing took 0.18 s
+Processing took 0.185 s
 ```
 
 
@@ -91,18 +92,18 @@ Just wrap your code using a `with` statement
 from horology import Timing
 
 with Timing(name='Important calculations: '):
-    pass
+    ...
 ```
 Result:
 ```
-Important calculations: 12.43 s
+Important calculations: 12.4 s
 ```
 
 #### More cool stuff:
 You can suppress default printing and directly use measured time (also within context)
 ```python
 with Timing(print_fn=None) as t:
-    pass
+    ...
     
 make_use_of(t.interval)
 ```
@@ -110,9 +111,10 @@ make_use_of(t.interval)
 
 ## Time units
 Time units are by default automatically adjusted, for example you will see
-`foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, 
-you can override this by setting the `unit` argument with one of these names: 
+`foo: 7.12 ms` rather than `foo: 0.007 s`. If you don't like it, you can 
+override this by setting the `unit` argument with one of these names: 
 `['ns', 'us', 'ms', 's', 'min', 'h', 'd']`.
+
 
 
 ## Contributions 
