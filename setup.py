@@ -1,3 +1,7 @@
+"""
+This file will be removed. It was replaced by poetry release build and
+publish mechanism.
+"""
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
