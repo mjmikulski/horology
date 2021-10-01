@@ -36,7 +36,7 @@ class TimedDecoratorTest(unittest.TestCase):
 
             print_str: str = out.getvalue().strip()
 
-        self.assertTrue(print_str.startswith('Function foo elapsed 11'))
+        self.assertTrue(print_str.startswith('Function foo elapsed 1.1'))
         self.assertTrue(print_str.endswith(' ms'))
 
     def test_wrapping(self):
@@ -78,6 +78,7 @@ class TimedDecoratorTest(unittest.TestCase):
         t = bar.interval
 
         self.assertAlmostEqual(t, 0.15, delta=0.02)
+
 
 if __name__ == '__main__':
     unittest.main()
