@@ -26,7 +26,7 @@ from your fork to horology.
 7. Wait for my feedback.
 
 ## How to write some documentation?
-Follow keras style. Use grammarly. 
+Follow numpy style, but no space before a colon ;)
 
 ## Commit messages
 Follow the rules when writing a commit message:
