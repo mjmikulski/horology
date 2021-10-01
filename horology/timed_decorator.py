@@ -5,7 +5,7 @@ from typing import Callable
 from horology.tformatter import rescale_time
 
 
-def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
+def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
     """ Decorator that prints time of execution of a function
 
     Parameters
@@ -16,10 +16,9 @@ def timed(f: Callable = None, name=None, *, unit='a', print_fn=print):
         String that should be printed as the function name. By default
         the f.__name__ proceeded by a colon and space is used. See
         examples below.
-    unit: str, optional
-        Time unit used to print elapsed time. Possible values:
-         ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
-         for automatic time adjustment (default).
+    unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
+        Time unit used to print elapsed time. Use 'a' or 'auto' for
+        automatic time adjustment (default).
     print_fn: Callable or None, optional
         Function that is called to print the time elapsed. Use `None` to
         disable printing anything. You can provide e.g. `logger.info`.

@@ -15,20 +15,27 @@ UNITS = [
 
 def rescale_time(interval: float, unit: str):
     """
-    Rescales the time interval using the provided unit or smart rescaling
+    Rescale the time interval using the provided unit
 
-    # Arguments
-        interval: time interval in seconds
-        unit: unit that should be used to rescale the interval, one of those:
-            ['ns', 'us', 'ms', 's', 'min', 'h', 'd']
-            or 'auto' for smart rescaling
+    Parameters
+    ----------
+    interval: float
+        Time interval to be rescaled, in seconds.
+    unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
+        Time unit to which `interval` should be rescaled. Use 'a' or
+        'auto' for automatic time adjustment.
 
-    # Returns
-        A tuple (rescaled_interval, unit), where
-            rescaled_interval: the time interval in new units
-            unit: the same unit that was passed or a convenient unit found automatically
+    Returns
+    -------
+    rescaled_interval: float
+        Time interval in new units.
+    unit:
+        Convenient unit found automatically if input unit was 'auto'.
+        Otherwise `unit` is returned unchanged.
 
-    # Example
+
+    Examples
+    --------
         >>> rescale_time(0.421, 'us')
         (421000.0, 'us')
         >>> rescale_time(150, 'min')
