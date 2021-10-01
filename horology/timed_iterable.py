@@ -26,15 +26,15 @@ class Timed:
         disable printing the summary. You can provide e.g.
         `logger.info`. By default the built-in `print` function is used.
 
-    Attributes
+    Properties
     ----------
     num_iterations: int
         How many iteration were executed.
     total: float
         Total time elapsed in seconds.
 
-    Examples
-    --------
+    Example
+    -------
     Basic usage
         ```
         from horology import Timed
@@ -45,15 +45,14 @@ class Timed:
 
         Possible result:
         ```
-        iteration    1: 12.00 s
+        iteration    1: 12.0 s
         iteration    2: 8.00 s
-        iteration    3: 100.00 s
+        iteration    3: 100 s
 
-        total 3 iterations in 120.00 s
-        min/median/max: 8.00/12.00/100.00 s
-        average (std): 40.00 (52.00) s
+        total 3 iterations in 120 s
+        min/median/max: 8.00/12.0/100 s
+        average (std): 40.0 (52.0) s
         ```
-
     """
 
     def __init__(self, iterable: Iterable, *,
@@ -82,7 +81,7 @@ class Timed:
                 interval = now - self._last
                 self.intervals.append(interval)
                 t, u = rescale_time(interval, self.unit)
-                self.iteration_print_fn(f"iteration {self.num_iterations:4}: {t:.2f} {u}")
+                self.iteration_print_fn(f'iteration {self.num_iterations:4}: {t:.3g} {u}')
 
             self._last = now
 
@@ -92,17 +91,20 @@ class Timed:
             self.print_summary()
             raise StopIteration
 
+    def __len__(self):
+        return self.iterable.__len__()
+
     @property
-    def num_iterations(self):
+    def num_iterations(self) -> int:
         return len(self.intervals)
 
     @property
-    def n(self):
-        """ Deprecated """
+    def n(self) -> int:
+        "Deprecated"
         return self.num_iterations
 
     @property
-    def total(self):
+    def total(self) -> float:
         return self._last - self._start
 
     def print_summary(self):
@@ -112,19 +114,20 @@ class Timed:
 
         Use `summary_print_fn` argument in the constructor to control
         if and where the summary is printed.
+
         """
         # Leave an empty line if iterations and summary are printed to
         # the same output.
         if self.iteration_print_fn == self.summary_print_fn:
-            print_str = "\n"
+            print_str = '\n'
         else:
-            print_str = ""
+            print_str = ''
 
         if self.num_iterations == 0:
-            print_str = "no iterations"
+            print_str = 'no iterations'
         elif self.num_iterations == 1:
             t, u = rescale_time(self.intervals[0], unit=self.unit)
-            print_str += f"one iteration: {t:.2f} {u}"
+            print_str += f'one iteration: {t:.3g} {u}'
         else:
             t_total, u_total = rescale_time(self.total, self.unit)
 
@@ -134,14 +137,14 @@ class Timed:
             t_max, _ = rescale_time(max(self.intervals), u)
             t_std, _ = rescale_time(stdev(self.intervals), u)
 
-            print_str += f"total {self.num_iterations} iterations "
-            print_str += f"in {t_total:.2f} {u_total}\n"
-            print_str += f"min/median/max: " \
-                         f"{t_min:.3g}" \
-                         f"/{t_median:.3g}" \
-                         f"/{t_max:.3g} {u}\n"
-            print_str += f"average (std): " \
-                         f"{t_mean:.3g} " \
-                         f"({t_std:.3g}) {u}"
+            print_str += f'total {self.num_iterations} iterations '
+            print_str += f'in {t_total:.3g} {u_total}\n'
+            print_str += f'min/median/max: ' \
+                         f'{t_min:.3g}' \
+                         f'/{t_median:.3g}' \
+                         f'/{t_max:.3g} {u}\n'
+            print_str += f'average (std): ' \
+                         f'{t_mean:.3g} ' \
+                         f'({t_std:.3g}) {u}'
 
         self.summary_print_fn(print_str)

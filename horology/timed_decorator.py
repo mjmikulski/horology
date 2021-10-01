@@ -6,7 +6,7 @@ from horology.tformatter import rescale_time
 
 
 def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
-    """ Decorator that prints time of execution of a function
+    """Decorator that prints time of execution of the decorated function
 
     Parameters
     ----------
@@ -32,7 +32,8 @@ def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
 
     Returns
     -------
-    Decorated function.
+    Callable
+        Decorated function `f`.
 
     Examples
     --------
@@ -57,7 +58,7 @@ def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
         @timed(unit='ns')
         def baz():
             ...
-        baz() # prints 'baz: 32768.15 ns'
+        baz() # prints 'baz: 3.28e+04 ns'
         ```
 
     Suppress printing and use the attribute `interval` to get the time
@@ -69,6 +70,7 @@ def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
         qux() # prints nothing
         print(qux.interval)
         ```
+
     """
 
     def decorator(_f):
@@ -84,7 +86,7 @@ def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
                 if name is None:
                     name = _f.__name__ + ': '
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{name}{t:.2f} {u}'
+                print_str = f'{name}{t:.3g} {u}'
                 print_fn(print_str)
 
             return return_value

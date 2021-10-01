@@ -4,15 +4,17 @@ from horology.tformatter import rescale_time
 
 
 class Timing:
-    """ Context that measures time elapsed from entering to the exit
+    """Context manager that measures time elapsed with the context
+
+    Use `interval` property to get the time elapsed.
 
     Parameters
     ----------
     name: str, optional
-        String that should be printed before time elapsed,
-        e.g.: 'Doing x: '
+        Message that should be printed before the time value, e.g.:
+        'Doing x: '
     unit: str, optional
-        Time unit used to print elapsed time. Possible values:
+        Time unit used to print elapsed time. Possible values are:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
          for automatic time adjustment (default).
     print_fn: Callable or None, optional
@@ -21,14 +23,8 @@ class Timing:
         provide e.g. `logger.info`. By default the built-in `print`
         function is used.
 
-    Attributes
-    ----------
-    interval: float
-        Time elapsed inside the context in seconds. See details in the
-        doc string of the property.
-
-    Examples
-    --------
+    Example
+    -------
     Basic usage
         ```
         from horology import Timing
@@ -37,7 +33,7 @@ class Timing:
         ```
         Possible result:
         ```
-        Important calculations: 12.43 s
+        Important calculations: 12.4 s
         ```
     """
 
@@ -50,17 +46,17 @@ class Timing:
         self._interval = None
 
     @property
-    def interval(self):
-        """ Time elapsed in seconds
+    def interval(self) -> float:
+        """Time elapsed in seconds
 
         If still in the context, returns time elapsed from the moment
         of entering to the context. If the context has been already
-        left, returns the time spent in the context.
+        left, returns the total time spent in the context.
 
         """
-        if self._interval:  # when context exited
+        if self._interval:  # when the context exited
             return self._interval
-        else:  # when still in context
+        else:  # when still in the context
             return counter() - self._start
 
     def __enter__(self):
@@ -70,5 +66,5 @@ class Timing:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.2f} {u}"
+        print_str = f"{self.name}{t:.3g} {u}"
         self._print_fn(print_str)
