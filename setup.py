@@ -1,10 +1,14 @@
+"""
+This file will be removed. It was replaced by poetry release build and
+publish mechanism.
+"""
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='horology',
-      version='1.1.0',
+      version='1.2.0',
       author='Maciej J Mikulski',
       author_email='maciej.mikulski.jr@gmail.com',
       description='measure time conveniently',
@@ -15,12 +19,13 @@ setup(name='horology',
       install_requires=[],
       python_requires='>=3.6',
       classifiers=[
-          'Development Status :: 4 - Beta',
+          'Development Status :: 5 - Production/Stable',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
           'Topic :: Utilities',
           'Topic :: Software Development :: Libraries',
           'Topic :: Software Development :: Testing',
