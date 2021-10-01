@@ -1,15 +1,9 @@
 import unittest
 
-from horology.tformatter import auto_unit, rescale_time
+from horology.tformatter import rescale_time
 
 
 class TformatterTest(unittest.TestCase):
-    def test_auto_unit(self):
-        self.assertEqual(auto_unit(0.5 * 10 ** -6), 'ns')
-        self.assertEqual(auto_unit(2 * 10 ** -6), 'us')
-        self.assertEqual(auto_unit(0.5), 'ms')
-        self.assertEqual(auto_unit(5), 's')
-        self.assertEqual(auto_unit(2000), 'min')
 
     def test_simple_format(self):
         t, u = rescale_time(6, unit='s')
@@ -32,7 +26,7 @@ class TformatterTest(unittest.TestCase):
         self.assertEqual((t, u), (100, 'min'))
 
     def test_value_error(self):
-        self.assertRaises(ValueError, rescale_time, 0.5, unit='dupa')
+        self.assertRaises(ValueError, rescale_time, 0.5, unit='lustrum')
 
 
 if __name__ == '__main__':

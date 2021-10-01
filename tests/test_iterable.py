@@ -85,7 +85,7 @@ class TimedIterableTest(unittest.TestCase):
         self.assertLess(total_t_ns, 80_000_000)
 
         self.assertTrue(lines[-2].endswith('ns'))
-        self.assertGreaterEqual(len(lines[-2]), 50)
+        self.assertLessEqual(len(lines[-2]), 46)
 
     def test_no_print(self):
         out = StringIO()
