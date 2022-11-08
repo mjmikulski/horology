@@ -11,6 +11,9 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
 
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
+
     steps:
       - uses: actions/checkout@v3
 
