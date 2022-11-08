@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8"]
 
     env:
       POETRY_VIRTUALENVS_CREATE: false
@@ -28,7 +28,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry env use python
           poetry install
           python --version
 
