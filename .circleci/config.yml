@@ -1,47 +1,52 @@
 version: 2
 jobs:
-  build_36:
-    docker:
-      - image: circleci/python:3.6
-    steps:
-      - run: python --version
-      - checkout
-      - run: pip install --user nose
-      - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
 
-  build_37:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - run: python --version
-      - checkout
-      - run: pip install --user nose
-      - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
-
-  build_38:
+  build_3_8:
     docker:
       - image: circleci/python:3.8
     steps:
       - run: python --version
       - checkout
-      - run: pip install --user nose
-      - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
+      - run: pip install poetry
+      - run: poetry install
+      - run: pytest
 
-  build_39:
+  build_3_9:
     docker:
       - image: circleci/python:3.9
     steps:
       - run: python --version
       - checkout
-      - run: pip install --user nose
-      - run: nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
+      - run: pip install poetry
+      - run: poetry install
+      - run: pytest
+
+  build_3_10:
+    docker:
+      - image: circleci/python:3.10
+    steps:
+      - run: python --version
+      - checkout
+      - run: pip install poetry
+      - run: poetry install
+      - run: pytest
+
+  build_3_11:
+    docker:
+      - image: circleci/python:3.11
+    steps:
+      - run: python --version
+      - checkout
+      - run: pip install poetry
+      - run: poetry install
+      - run: pytest
 
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_36
-      - build_37
-      - build_38
-      - build_39
+      - build_3_8
+      - build_3_9
+      - build_3_10
+      - build_3_11
