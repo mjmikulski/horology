@@ -1,8 +1,8 @@
 from statistics import median, mean, stdev
 from time import perf_counter as counter
-from typing import Iterable, Callable, Optional
+from typing import Iterable, Callable, Optional, List
 
-from horology.tformatter import rescale_time
+from horology.tformatter import rescale_time, UnitType
 
 
 class Timed:
@@ -55,19 +55,23 @@ class Timed:
         ```
     """
 
-    def __init__(self, iterable: Iterable, *,
-                 unit='a',
-                 iteration_print_fn: Optional[Callable] = print,
-                 summary_print_fn: Optional[Callable] = print):
+    def __init__(
+            self,
+            iterable: Iterable,
+            *,
+            unit: UnitType = 'a',
+            iteration_print_fn: Optional[Callable] = print,
+            summary_print_fn: Optional[Callable] = print
+    ) -> None:
 
         self.iterable = iterable
         self.unit = unit
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
 
-        self.intervals = []
-        self._start = None
-        self._last = None
+        self.intervals: List[float] = []
+        self._start: Optional[float] = None
+        self._last: Optional[float] = None
 
     def __iter__(self):
         self._start = counter()
@@ -91,8 +95,8 @@ class Timed:
             self.print_summary()
             raise StopIteration
 
-    def __len__(self):
-        return self.iterable.__len__()
+    def __len__(self) -> int:
+        return self.iterable.__len__()  # type: ignore
 
     @property
     def num_iterations(self) -> int:
@@ -105,9 +109,12 @@ class Timed:
 
     @property
     def total(self) -> float:
-        return self._last - self._start
+        try:
+            return self._last - self._start  # type: ignore
+        except TypeError:
+            return 0
 
-    def print_summary(self):
+    def print_summary(self) -> None:
         """ Print statistics of times elapsed in each iteration
 
         It is called automatically when the iteration ends.

@@ -1,11 +1,17 @@
 from functools import wraps
 from time import perf_counter as counter
-from typing import Callable
+from typing import Any, Callable, Optional
 
-from horology.tformatter import rescale_time
+from horology.tformatter import rescale_time, UnitType
 
 
-def timed(f: Callable = None, name=None, *, unit='auto', print_fn=print):
+def timed(
+        f: Optional[Callable[..., Any]] = None,
+        name: Optional[str] = None,
+        *,
+        unit: UnitType = 'auto',
+        print_fn: Optional[Callable[..., Any]] = print
+) -> Callable[..., Any]:
     """Decorator that prints time of execution of the decorated function
 
     Parameters
