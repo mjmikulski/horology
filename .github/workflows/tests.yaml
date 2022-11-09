@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.9"]
+        python-version: ["3.8", "3.9"]
 
     env:
       POETRY_VIRTUALENVS_CREATE: false
@@ -30,6 +30,10 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --no-root
+
+      - name: Check types
+        run: |
+          mypy .
 
       - name: Test with pytest
         run: |
