@@ -1,8 +1,7 @@
 from math import inf
-from typing import Tuple, NamedTuple, Literal, TypeAlias, cast
+from typing import Tuple, NamedTuple, Literal, cast
 
-UnitType: TypeAlias = Literal['a', 'auto', 'ns', 'us', 'ms', 's', 'min',
-                              'h', 'd']
+UnitType = Literal['a', 'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd']
 
 
 class Unit(NamedTuple):
