@@ -1,105 +1,81 @@
-import unittest
 from contextlib import redirect_stdout
 from io import StringIO
-from time import sleep
+from unittest.mock import patch, Mock
 
 from horology import Timed
 
 
-class TimedIterableTest(unittest.TestCase):
-    def test_no_iter(self):
-        out = StringIO()
-        with redirect_stdout(out):
+@patch('horology.timed_iterable.counter')
+class TestTimedIterableTest:
+
+    def test_no_iter(self, counter_mock: Mock) -> None:
+        with redirect_stdout(out := StringIO()):
             for _ in Timed([]):
                 pass
-            print_str: str = out.getvalue().strip()
-        self.assertEqual(print_str, 'no iterations')
+            print_str = out.getvalue().strip()
 
-    def test_one_iteration(self):
-        out = StringIO()
-        with redirect_stdout(out):
-            for _ in Timed([1], unit='s'):
-                sleep(0.15)
-            print_str: str = out.getvalue().strip()
+        assert print_str == 'no iterations'
+        assert counter_mock.call_count == 2
 
-        lines = print_str.split('\n')
+    def test_one_iteration(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.01, 1.01]
 
-        self.assertTrue(lines[0].startswith('iteration    1: 0.1'))
-        self.assertTrue(lines[0].endswith('s'))
+        with redirect_stdout(out := StringIO()):
+            for _ in Timed([1]):
+                pass
+            lines = out.getvalue().strip().split('\n')
 
-        self.assertEqual(lines[1], '')
+        assert lines[0] == 'iteration    1: 1 s'
+        assert lines[1] == ''
+        assert lines[2] == 'one iteration: 1 s'
 
-        self.assertTrue(lines[2].startswith('one iteration: 0.1'))
-        self.assertTrue(lines[2].endswith('s'))
+    def test_summary(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [-0.01, 0, 0.5, 2, 3, 4, 5, 6]
 
-    def test_summary(self):
-        out = StringIO()
-        with redirect_stdout(out):
-            for k in Timed(range(1, 6)):
-                sleep(0.1 * k)
-            print_str: str = out.getvalue().strip()
+        with redirect_stdout(out := StringIO()):
+            for _ in Timed(range(5)):
+                pass
+            lines = out.getvalue().strip().split('\n')
 
-        lines = print_str.split('\n')
+        assert lines[-4] == ''
+        assert lines[-3] == 'total 5 iterations in 5.01 s'
+        assert lines[-2] == 'min/median/max: 0.5/1/1.5 s'
+        assert lines[-1] == 'average (std): 1 (0.354) s'
 
-        self.assertTrue(lines[-3].startswith('total 5 iterations in 1.5'))
-        self.assertTrue(lines[-2].endswith('s'))
+        assert counter_mock.call_count == 7
 
-        self.assertTrue(lines[-2].startswith('min/median/max:'))
-        self.assertTrue(lines[-2].endswith('ms'))
+    def test_summary_time_rescaling_s(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 0.001, 0.002, 0.004]
 
-        self.assertTrue(lines[-1].startswith('average (std): 3'))
-        self.assertTrue(lines[-1].endswith('ms'))
+        with redirect_stdout(out := StringIO()):
+            for _ in Timed(range(3), unit='s'):
+                pass
+            lines = out.getvalue().strip().split('\n')
 
-    def test_summary_time_rescaling_s(self):
-        out = StringIO()
-        with redirect_stdout(out):
-            for k in Timed(range(1, 4), unit='s'):
-                sleep(0.001 * k)
-            print_str: str = out.getvalue().strip()
+        assert lines[-3] == 'total 3 iterations in 0.004 s'
+        assert lines[-2] == 'min/median/max: 0.001/0.001/0.002 s'
+        assert lines[-1] == 'average (std): 0.00133 (0.000577) s'
 
-        lines = print_str.split('\n')
+    def test_summary_time_rescaling_ns(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 0.0015, 0.002, 0.004]
 
-        self.assertTrue(lines[-3].startswith('total 3 iterations in 0.0'))
-        self.assertTrue(lines[-2].endswith('s'))
+        with redirect_stdout(out := StringIO()):
+            for _ in Timed(range(3), unit='ns'):
+                pass
+            lines = out.getvalue().strip().split('\n')
 
-        self.assertTrue(lines[-2].startswith('min/median/max: 0.0'))
-        self.assertTrue(lines[-2].endswith('s'))
+        assert lines[-3] == 'total 3 iterations in 4e+06 ns'
+        assert lines[-2] == 'min/median/max: 5e+05/1.5e+06/2e+06 ns'
+        assert lines[-1] == 'average (std): 1.33e+06 (7.64e+05) ns'
 
-        self.assertTrue(lines[-1].startswith('average (std): 0.0'))
-        self.assertTrue(lines[-1].endswith('s'))
+    def test_no_print(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 10, 20, 30]
 
-    def test_summary_time_rescaling_ns(self):
-        out = StringIO()
-        with redirect_stdout(out):
-            for k in Timed(range(3), unit='ns'):
-                sleep(0.021 * k)
-            print_str: str = out.getvalue().strip()
-
-        lines = print_str.split('\n')
-
-        # we check for sth like this:
-        # total 3 iterations in 63642200.00 ns
-        self.assertTrue(lines[-3].startswith('total 3 iterations in'))
-        total_t_ns = float(lines[-3].split(' ')[-2])
-        self.assertGreater(total_t_ns, 40_000_000)
-        self.assertLess(total_t_ns, 80_000_000)
-
-        self.assertTrue(lines[-2].endswith('ns'))
-        self.assertLessEqual(len(lines[-2]), 46)
-
-    def test_no_print(self):
-        out = StringIO()
-        with redirect_stdout(out):
+        with redirect_stdout(out := StringIO()):
             T = Timed(['cat', 'dog', 'parrot'], iteration_print_fn=None, summary_print_fn=None)
             for a in T:
-                sleep(0.15)
                 print(a)
-            print_str: str = out.getvalue().strip()
+            lines = out.getvalue().strip().split('\n')
 
-        lines = print_str.split('\n')
-        self.assertListEqual(lines, ['cat', 'dog', 'parrot'])
-        self.assertAlmostEqual(T.total, 0.45, delta=0.05)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert lines == ['cat', 'dog', 'parrot']
+        assert T.total == 30

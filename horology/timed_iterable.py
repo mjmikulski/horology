@@ -24,7 +24,7 @@ class Timed:
     summary_print_fn: Callable, optional
         Function that is called to print the summary. Use `None` to
         disable printing the summary. You can provide e.g.
-        `logger.info`. By default the built-in `print` function is used.
+        `logger.info`. By default, the built-in `print` function is used.
 
     Properties
     ----------
@@ -81,7 +81,7 @@ class Timed:
     def __next__(self):
         try:
             now = counter()
-            if self._last:
+            if self._last is not None:
                 interval = now - self._last
                 self.intervals.append(interval)
                 t, u = rescale_time(interval, self.unit)
