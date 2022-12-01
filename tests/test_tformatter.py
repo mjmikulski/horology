@@ -16,6 +16,12 @@ class TestTformatter:
         t, u = rescale_time(6, unit='min')
         assert t == 0.1 and u == 'min'
 
+    @pytest.mark.parametrize('unit', ['ns', 'us', 'ms', 's', 'min', 'h', 'd'])
+    @pytest.mark.parametrize('time_interval', [0.002, 2, 2000])
+    def test_unit_is_kept(self, unit: str, time_interval: float) -> None:
+        _,  u = rescale_time(time_interval, unit=unit)  # type: ignore
+        assert u == unit
+
     def test_auto_format(self) -> None:
         t, u = rescale_time(6, unit='a')
         assert t == 6 and u == 's'
