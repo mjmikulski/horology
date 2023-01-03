@@ -95,8 +95,6 @@ class Timed:
             self.print_summary()
             raise StopIteration
 
-    def __len__(self) -> int:
-        return self.iterable.__len__()  # type: ignore
 
     @property
     def num_iterations(self) -> int:
