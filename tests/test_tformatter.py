@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from horology.tformatter import rescale_time
@@ -19,7 +21,7 @@ class TestTformatter:
     @pytest.mark.parametrize('unit', ['ns', 'us', 'ms', 's', 'min', 'h', 'd'])
     @pytest.mark.parametrize('time_interval', [0.002, 2, 2000])
     def test_unit_is_kept(self, unit: str, time_interval: float) -> None:
-        _,  u = rescale_time(time_interval, unit=unit)  # type: ignore
+        _, u = rescale_time(time_interval, unit=unit)  # type: ignore
         assert u == unit
 
     def test_auto_format(self) -> None:
@@ -33,5 +35,7 @@ class TestTformatter:
         assert t == 100 and u == 'min'
 
     def test_wrong_unit(self) -> None:
-        with pytest.raises(ValueError, match='Unknown unit: lustrum. Use one of the following:'):
+        matching_msg = "Unknown unit: lustrum. Use one of the following: " \
+                       "['ns', 'us', 'ms', 's', 'min', 'h', 'd'] or 'auto'"
+        with pytest.raises(ValueError, match=re.escape(matching_msg)):
             rescale_time(0.5, 'lustrum')  # type: ignore

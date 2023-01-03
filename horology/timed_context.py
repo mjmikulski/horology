@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from time import perf_counter as counter
 from types import TracebackType
-from typing import Optional, Callable, Any, Type, Literal
+from typing import Any, Callable, Literal, Optional, Type
 
-from horology.tformatter import rescale_time, UnitType
+from horology.tformatter import UnitType, rescale_time
 
 
 class Timing:
@@ -85,6 +85,6 @@ class Timing:
     ) -> Literal[False]:
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.3g} {u}"
+        print_str = f'{self.name}{t:.3g} {u}'
         self._print_fn(print_str)  # type: ignore
         return False

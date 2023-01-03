@@ -2,7 +2,7 @@ from functools import wraps
 from time import perf_counter as counter
 from typing import Any, Callable, Optional
 
-from horology.tformatter import rescale_time, UnitType
+from horology.tformatter import UnitType, rescale_time
 
 
 def timed(
@@ -19,7 +19,7 @@ def timed(
     f: Callable
         The function which execution time should be measured.
     name: str or None, optional
-        String that should be printed as the function name. By default
+        String that should be printed as the function name. By default,
         the f.__name__ proceeded by a colon and space is used. See
         examples below.
     unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}

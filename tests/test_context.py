@@ -1,6 +1,6 @@
 from contextlib import redirect_stdout
 from io import StringIO
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from horology import Timing
 

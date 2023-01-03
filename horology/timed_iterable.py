@@ -1,8 +1,8 @@
-from statistics import median, mean, stdev
+from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Iterable, Callable, Optional, List
+from typing import Callable, Iterable, List, Optional
 
-from horology.tformatter import rescale_time, UnitType
+from horology.tformatter import UnitType, rescale_time
 
 
 class Timed:
@@ -137,6 +137,7 @@ class Timed:
             t_total, u_total = rescale_time(self.total, self.unit)
 
             t_median, u = rescale_time(median(self.intervals), self.unit)
+            # For clarity, all values are shown using the same unit.
             t_min, _ = rescale_time(min(self.intervals), u)
             t_mean, _ = rescale_time(mean(self.intervals), u)
             t_max, _ = rescale_time(max(self.intervals), u)

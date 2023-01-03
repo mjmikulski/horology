@@ -1,5 +1,5 @@
 from math import inf
-from typing import Tuple, NamedTuple, Literal, cast
+from typing import Literal, NamedTuple, Tuple, cast
 
 UnitType = Literal['a', 'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd']
 
