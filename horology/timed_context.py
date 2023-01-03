@@ -24,7 +24,7 @@ class Timing:
     print_fn: Callable or None, optional
         Function that is called to print the time elapsed in the
         context. Use `None` to disable printing anything. You can
-        provide e.g. `logger.info`. By default the built-in `print`
+        provide e.g. `logger.info`. By default, the built-in `print`
         function is used.
 
     Example
