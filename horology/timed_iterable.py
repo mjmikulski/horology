@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from statistics import mean, median, stdev
 from time import perf_counter as counter
 from typing import Callable, Iterable, List, Optional
@@ -73,7 +75,7 @@ class Timed:
         self._start: Optional[float] = None
         self._last: Optional[float] = None
 
-    def __iter__(self):
+    def __iter__(self) -> Timed:
         self._start = counter()
         self.iterable = iter(self.iterable)
         return self
@@ -94,7 +96,6 @@ class Timed:
         except StopIteration:
             self.print_summary()
             raise StopIteration
-
 
     @property
     def num_iterations(self) -> int:
