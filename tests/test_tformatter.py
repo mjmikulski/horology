@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from horology.tformatter import rescale_time
+from horology.tformatter import UnitType, rescale_time
 
 
 class TestTformatter:
@@ -20,8 +20,8 @@ class TestTformatter:
 
     @pytest.mark.parametrize('unit', ['ns', 'us', 'ms', 's', 'min', 'h', 'd'])
     @pytest.mark.parametrize('time_interval', [0.002, 2, 2000])
-    def test_unit_is_kept(self, unit: str, time_interval: float) -> None:
-        _, u = rescale_time(time_interval, unit=unit)  # type: ignore
+    def test_unit_is_kept(self, unit: UnitType, time_interval: float) -> None:
+        _, u = rescale_time(time_interval, unit=unit)
         assert u == unit
 
     def test_auto_format(self) -> None:

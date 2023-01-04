@@ -31,9 +31,9 @@ jobs:
         run: |
           poetry install --no-root
 
-#      - name: Check types
-#        run: |
-#          mypy .
+      - name: Check types
+        run: |
+          mypy .
 
       - name: Test with pytest
         run: |

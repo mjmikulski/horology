@@ -1,17 +1,45 @@
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Protocol, TypeVar, overload
 
 from horology.tformatter import UnitType, rescale_time
 
+F = TypeVar('F', bound=Callable)
 
+
+class CallableWithInterval(Protocol[F]):
+    """
+    When support for python version 3.9 and 3.9 is dropped, this should
+    be refactored with typing.ParamSpec
+
+    References
+    ----------
+    [PEP 612](https://peps.python.org/pep-0612/)
+    """
+    interval: float
+    __call__: F
+    __name__: str
+
+
+@overload
+def timed(f: F) -> CallableWithInterval[F]: ...  # Bare decorator usage
+
+
+@overload
 def timed(
-        f: Optional[Callable[..., Any]] = None,
-        name: Optional[str] = None,
         *,
+        name: Optional[str] = None,
         unit: UnitType = 'auto',
         print_fn: Optional[Callable[..., Any]] = print
-) -> Callable[..., Any]:
+) -> Callable[[F], CallableWithInterval[F]]: ...  # Decorator with arguments
+
+
+def timed(
+        f: Optional[Callable] = None,
+        *,
+        name: Optional[str] = None,
+        unit: UnitType = 'auto',
+        print_fn: Optional[Callable[..., Any]] = print):
     """Decorator that prints time of execution of the decorated function
 
     Parameters
@@ -28,7 +56,7 @@ def timed(
     print_fn: Callable or None, optional
         Function that is called to print the time elapsed. Use `None` to
         disable printing anything. You can provide e.g. `logger.info`.
-        By default the built-in `print` function is used.
+        By default, the built-in `print` function is used.
 
     Attributes
     ----------
@@ -99,7 +127,7 @@ def timed(
 
         return wrapped
 
-    if f is None:
+    if f is None:  # used with ()
         return decorator
-    else:
+    else:  # used without ()
         return decorator(f)
