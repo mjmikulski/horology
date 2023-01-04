@@ -1,8 +1,10 @@
-from statistics import median, mean, stdev
-from time import perf_counter as counter
-from typing import Iterable, Callable, Optional
+from __future__ import annotations
 
-from horology.tformatter import rescale_time
+from statistics import mean, median, stdev
+from time import perf_counter as counter
+from typing import Callable, Iterable, List, Optional
+
+from horology.tformatter import UnitType, rescale_time
 
 
 class Timed:
@@ -24,7 +26,7 @@ class Timed:
     summary_print_fn: Callable, optional
         Function that is called to print the summary. Use `None` to
         disable printing the summary. You can provide e.g.
-        `logger.info`. By default the built-in `print` function is used.
+        `logger.info`. By default, the built-in `print` function is used.
 
     Properties
     ----------
@@ -55,21 +57,25 @@ class Timed:
         ```
     """
 
-    def __init__(self, iterable: Iterable, *,
-                 unit='a',
-                 iteration_print_fn: Optional[Callable] = print,
-                 summary_print_fn: Optional[Callable] = print):
+    def __init__(
+            self,
+            iterable: Iterable,
+            *,
+            unit: UnitType = 'a',
+            iteration_print_fn: Optional[Callable] = print,
+            summary_print_fn: Optional[Callable] = print
+    ) -> None:
 
         self.iterable = iterable
         self.unit = unit
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
 
-        self.intervals = []
-        self._start = None
-        self._last = None
+        self.intervals: List[float] = []
+        self._start: Optional[float] = None
+        self._last: Optional[float] = None
 
-    def __iter__(self):
+    def __iter__(self) -> Timed:
         self._start = counter()
         self.iterable = iter(self.iterable)
         return self
@@ -77,7 +83,7 @@ class Timed:
     def __next__(self):
         try:
             now = counter()
-            if self._last:
+            if self._last is not None:
                 interval = now - self._last
                 self.intervals.append(interval)
                 t, u = rescale_time(interval, self.unit)
@@ -91,9 +97,6 @@ class Timed:
             self.print_summary()
             raise StopIteration
 
-    def __len__(self):
-        return self.iterable.__len__()
-
     @property
     def num_iterations(self) -> int:
         return len(self.intervals)
@@ -105,9 +108,12 @@ class Timed:
 
     @property
     def total(self) -> float:
-        return self._last - self._start
+        try:
+            return self._last - self._start  # type: ignore
+        except TypeError:
+            return 0
 
-    def print_summary(self):
+    def print_summary(self) -> None:
         """ Print statistics of times elapsed in each iteration
 
         It is called automatically when the iteration ends.
@@ -132,6 +138,7 @@ class Timed:
             t_total, u_total = rescale_time(self.total, self.unit)
 
             t_median, u = rescale_time(median(self.intervals), self.unit)
+            # For clarity, all values are shown using the same unit.
             t_min, _ = rescale_time(min(self.intervals), u)
             t_mean, _ = rescale_time(mean(self.intervals), u)
             t_max, _ = rescale_time(max(self.intervals), u)

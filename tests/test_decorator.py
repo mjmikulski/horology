@@ -1,84 +1,76 @@
-import unittest
 from contextlib import redirect_stdout
 from io import StringIO
-from time import sleep
+from unittest.mock import Mock, patch
 
 from horology import timed
 
 
-class TimedDecoratorTest(unittest.TestCase):
-    def test_no_args(self):
-        # Define a decorated function:
+@patch('horology.timed_decorator.counter')
+class TestDecorator:
+
+    def test_no_args(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
         @timed
         def foo():
-            sleep(0.15)
+            pass
 
-        out = StringIO()
-        with redirect_stdout(out):
-            # Call decorated function
+        with redirect_stdout(out := StringIO()):
             foo()
+            print_str = out.getvalue().strip()
 
-            print_str: str = out.getvalue().strip()
+        assert print_str == 'foo: 120 ms'
 
-        self.assertTrue(print_str.startswith('foo: 1'))
-        self.assertTrue(print_str.endswith('ms'))
+    def test_with_name_and_unit(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 21]
 
-    def test_with_name_and_unit(self):
-        # Define a decorated function:
         @timed(name='Function foo elapsed ', unit='ms')
         def foo():
-            sleep(1.15)
+            pass
 
-        out = StringIO()
-        with redirect_stdout(out):
-            # Call decorated function
+        with redirect_stdout(out := StringIO()):
             foo()
+            print_str = out.getvalue().strip()
 
-            print_str: str = out.getvalue().strip()
+        assert print_str == 'Function foo elapsed 2.1e+04 ms'
 
-        self.assertTrue(print_str.startswith('Function foo elapsed 1.1'))
-        self.assertTrue(print_str.endswith(' ms'))
-
-    def test_wrapping(self):
-        # Define a decorated function:
+    def test_wrapping_transparently(self, _: Mock) -> None:
         @timed(name='bar elapsed: ', unit='auto')
         def bar():
             """Very important function"""
+
+        assert bar.__doc__ == 'Very important function'
+        assert bar.__name__ == 'bar'
+
+    def test_interval_property(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 1, 2, 3]
+
+        @timed
+        def bar():
             pass
 
-        # Call decorated function
+        assert not counter_mock.called
+
         bar()
+        assert bar.interval == 1
+        assert counter_mock.call_count == 2
 
-        # bar is transparently wrapped
-        self.assertEqual(bar.__doc__, 'Very important function')
-        self.assertEqual(bar.__name__, 'bar')
+        assert bar.interval == 1
+        assert counter_mock.call_count == 2
 
-    def test_interval_property(self):
-        # Define a decorated function:
-        @timed
-        def bar(x):
-            sleep(x)
+        bar()
+        assert bar.interval == 1
+        assert counter_mock.call_count == 4
 
-        bar(0.15)
-        t = bar.interval
-        self.assertAlmostEqual(t, 0.15, delta=0.02)
+    def test_usage_without_print(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.07]
 
-        bar(0.2)
-        t = bar.interval
-        self.assertAlmostEqual(t, 0.2, delta=0.02)
-
-    def test_usage_without_print(self):
-        # Define a decorated function:
         @timed(print_fn=None)
         def bar():
-            sleep(0.15)
+            pass
 
-        # Call decorated function
-        bar()
-        t = bar.interval
+        with redirect_stdout(out := StringIO()):
+            bar()
+            print_str = out.getvalue().strip()
 
-        self.assertAlmostEqual(t, 0.15, delta=0.02)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert print_str == ''

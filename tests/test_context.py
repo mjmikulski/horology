@@ -1,52 +1,61 @@
-import unittest
 from contextlib import redirect_stdout
 from io import StringIO
-from time import sleep
+from unittest.mock import Mock, patch
 
 from horology import Timing
 
 
-class TimedContextTest(unittest.TestCase):
-    def test_no_args(self):
-        out = StringIO()
-        with redirect_stdout(out):
+@patch('horology.timed_context.counter')
+class TestContext:
+    def test_no_args(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        with redirect_stdout(out := StringIO()):
             with Timing():
-                sleep(0.15)
+                pass
+            print_str = out.getvalue().strip()
 
-            print_str: str = out.getvalue().strip()
+        assert print_str == '120 ms'
 
-        self.assertTrue(print_str.startswith('1'))
-        self.assertTrue(print_str.endswith('ms'))
+    def test_if_independent_to_absolute_time_values(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [100.05, 100.17]
 
-    def test_with_name_and_unit(self):
-        out = StringIO()
-        with redirect_stdout(out):
-            with Timing(name='Preprocessing: ', unit='ns'):
-                sleep(0.15)
+        with redirect_stdout(out := StringIO()):
+            with Timing():
+                pass
+            print_str = out.getvalue().strip()
 
-            print_str: str = out.getvalue().strip()
+        assert print_str == '120 ms'
 
-        self.assertTrue(print_str.startswith('Preprocessing: 1'))
-        self.assertTrue(print_str.endswith('ns'))
+    def test_with_name_and_unit(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
 
-    def test_interval_property(self):
+        with redirect_stdout(out := StringIO()):
+            with Timing(name='Preprocessing: ', unit='s'):
+                pass
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'Preprocessing: 0.12 s'
+
+    def test_interval_property(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12, 0.24, 0.36, 0.48]  # last value never used
+        from horology import Timing
+
         with Timing(print_fn=None, unit='ms') as t:
-            # should be zero at beginning
-            self.assertAlmostEqual(t.interval, 0, delta=0.02)
+            # should increase
+            assert t.interval == 0.12
 
-            # check in meantime
-            sleep(0.15)
-            self.assertAlmostEqual(t.interval, 0.15, delta=0.02)
+            # should increase
+            assert t.interval == 0.24
 
-            sleep(0.15)
+        # counter should not be called after exiting the context
+        assert counter_mock.call_count == 4
 
         # check after the context was exited
-        self.assertAlmostEqual(t.interval, 0.3, delta=0.02)
+        assert t.interval == 0.36
 
         # make sure timing was stopped after the context was exited
-        sleep(0.15)
-        self.assertAlmostEqual(t.interval, 0.3, delta=0.02)
+        assert t.interval == 0.36
 
-
-if __name__ == '__main__':
-    unittest.main()
+        # check again that counter was not called after context has been exited
+        assert counter_mock.call_count == 4

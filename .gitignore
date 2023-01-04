@@ -6,3 +6,5 @@
 /dist
 /.coverage
 /cover
+
+poetry.lock

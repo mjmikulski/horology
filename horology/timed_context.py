@@ -1,6 +1,10 @@
-from time import perf_counter as counter
+from __future__ import annotations
 
-from horology.tformatter import rescale_time
+from time import perf_counter as counter
+from types import TracebackType
+from typing import Any, Callable, Literal, Optional, Type
+
+from horology.tformatter import UnitType, rescale_time
 
 
 class Timing:
@@ -20,7 +24,7 @@ class Timing:
     print_fn: Callable or None, optional
         Function that is called to print the time elapsed in the
         context. Use `None` to disable printing anything. You can
-        provide e.g. `logger.info`. By default the built-in `print`
+        provide e.g. `logger.info`. By default, the built-in `print`
         function is used.
 
     Example
@@ -37,13 +41,19 @@ class Timing:
         ```
     """
 
-    def __init__(self, name=None, *, unit='a', print_fn=print):
+    def __init__(
+            self,
+            name: Optional[str] = None,
+            *,
+            unit: UnitType = 'auto',
+            print_fn: Optional[Callable[..., Any]] = print
+    ) -> None:
         self.name = name if name else ""
         self.unit = unit
         self._print_fn = print_fn if print_fn else lambda _: None
 
-        self._start = None
-        self._interval = None
+        self._start: Optional[float] = None
+        self._interval: Optional[float] = None
 
     @property
     def interval(self) -> float:
@@ -54,17 +64,27 @@ class Timing:
         left, returns the total time spent in the context.
 
         """
+        if self._start is None:
+            raise RuntimeError('`interval` can be invoked only inside a '
+                               'context or after exiting it.')
+
         if self._interval:  # when the context exited
             return self._interval
         else:  # when still in the context
             return counter() - self._start
 
-    def __enter__(self):
+    def __enter__(self) -> Timing:
         self._start = counter()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+            self,
+            exc_type: Optional[Type[BaseException]],
+            exc_val: Optional[BaseException],
+            exc_tb: Optional[TracebackType],
+    ) -> Literal[False]:
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f"{self.name}{t:.3g} {u}"
-        self._print_fn(print_str)
+        print_str = f'{self.name}{t:.3g} {u}'
+        self._print_fn(print_str)  # type: ignore
+        return False

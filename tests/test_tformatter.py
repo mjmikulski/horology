@@ -1,33 +1,41 @@
-import unittest
+import re
 
-from horology.tformatter import rescale_time
+import pytest
+
+from horology.tformatter import UnitType, rescale_time
 
 
-class TformatterTest(unittest.TestCase):
+class TestTformatter:
 
-    def test_simple_format(self):
+    def test_no_rescaling(self) -> None:
         t, u = rescale_time(6, unit='s')
-        self.assertEqual((t, u), (6, 's'))
+        assert t == 6 and u == 's'
 
+    def test_simple_format(self) -> None:
         t, u = rescale_time(6, unit='ms')
-        self.assertEqual((t, u), (6000, 'ms'))
+        assert t == 6000 and u == 'ms'
 
         t, u = rescale_time(6, unit='min')
-        self.assertEqual((t, u), (0.1, 'min'))
+        assert t == 0.1 and u == 'min'
 
-    def test_auto_format(self):
+    @pytest.mark.parametrize('unit', ['ns', 'us', 'ms', 's', 'min', 'h', 'd'])
+    @pytest.mark.parametrize('time_interval', [0.002, 2, 2000])
+    def test_unit_is_kept(self, unit: UnitType, time_interval: float) -> None:
+        _, u = rescale_time(time_interval, unit=unit)
+        assert u == unit
+
+    def test_auto_format(self) -> None:
         t, u = rescale_time(6, unit='a')
-        self.assertEqual((t, u), (6, 's'))
+        assert t == 6 and u == 's'
 
         t, u = rescale_time(0.006, unit='auto')
-        self.assertEqual((t, u), (6, 'ms'))
+        assert t == 6 and u == 'ms'
 
-        t, u = rescale_time(6000, unit='AUTO')
-        self.assertEqual((t, u), (100, 'min'))
+        t, u = rescale_time(6000, unit='AUTO')  # type: ignore
+        assert t == 100 and u == 'min'
 
-    def test_value_error(self):
-        self.assertRaises(ValueError, rescale_time, 0.5, unit='lustrum')
-
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_wrong_unit(self) -> None:
+        matching_msg = "Unknown unit: lustrum. Use one of the following: " \
+                       "['ns', 'us', 'ms', 's', 'min', 'h', 'd'] or 'auto'"
+        with pytest.raises(ValueError, match=re.escape(matching_msg)):
+            rescale_time(0.5, 'lustrum')  # type: ignore

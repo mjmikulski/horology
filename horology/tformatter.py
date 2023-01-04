@@ -1,26 +1,37 @@
-from collections import namedtuple
 from math import inf
+from typing import Literal, NamedTuple, Tuple, cast
 
-Unit = namedtuple('Unit', 'names scale limit')
+UnitType = Literal['a', 'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd']
+
+
+class Unit(NamedTuple):
+    name: UnitType
+    scale: float
+    limit: float
+
 
 UNITS = [
-    Unit(('ns',), 10 ** -9, 10 ** -6),
-    Unit(('us',), 10 ** -6, 10 ** -3),
-    Unit(('ms',), 10 ** -3, 1),
-    Unit(('s',), 1, 10 ** 3),
-    Unit(('min',), 60, 6 * 10 ** 4),
-    Unit(('h', 'hs', 'hours'), 3600, 36 * 10 ** 5),
-    Unit(('d', 'day', 'days'), 3600 * 24, inf)]
+    Unit('ns', 10 ** -9, 10 ** -6),
+    Unit('us', 10 ** -6, 10 ** -3),
+    Unit('ms', 10 ** -3, 1),
+    Unit('s', 1, 10 ** 3),
+    Unit('min', 60, 6 * 10 ** 4),
+    Unit('h', 3600, 36 * 10 ** 5),
+    Unit('d', 3600 * 24, inf),
+]
 
 
-def rescale_time(interval: float, unit: str):
+def rescale_time(
+        interval: float,
+        unit: UnitType,
+) -> Tuple[float, UnitType]:
     """Rescale the time interval using the provided unit
 
     Parameters
     ----------
-    interval: float
+    interval
         Time interval to be rescaled, in seconds.
-    unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
+    unit
         Time unit to which `interval` should be rescaled. Use 'a' or
         'auto' for automatic time adjustment.
 
@@ -30,7 +41,7 @@ def rescale_time(interval: float, unit: str):
         Time interval in new units.
     str
         Convenient unit found automatically if input unit was 'auto'.
-        Otherwise provided `unit` is returned unchanged.
+        Otherwise, provided `unit` is returned unchanged.
 
     Examples
     --------
@@ -47,11 +58,11 @@ def rescale_time(interval: float, unit: str):
         If the unit provided is unknown.
 
     """
-    unit = unit.lower().strip()
+    unit = cast(UnitType, unit.lower().strip())
 
     for u in UNITS:
-        if unit in u.names or (unit in ('auto', 'a') and interval < u.limit):
-            return interval / u.scale, u.names[0]
+        if unit == u.name or (unit in ('a', 'auto') and interval < u.limit):
+            return interval / u.scale, u.name
 
     raise ValueError(f"Unknown unit: {unit}. Use one of the following: "
-                     f"{[x.names[0] for x in UNITS]} or 'auto'")
+                     f"{[x.name for x in UNITS]} or 'auto'")
