@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.0 alpha
+
+### Supported Python versions
+
+- Removed support for 3.8 and 3.9.
+- Added support for 3.12.
+
+Supported python versions are 3.10-3.12.
+
 ## 1.3.0
 
 ### Breaking API changes

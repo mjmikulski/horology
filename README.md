@@ -15,6 +15,7 @@ Conveniently measures the time of your loops, contexts and functions.
 
 | horology version | compatible python |
 |------------------|-------------------|
+| 1.4              | 3.10-3.12         |
 | 1.3              | 3.8-3.11          |
 | 1.2              | 3.6-3.9           |
 | 1.1              | 3.6-3.8           |
