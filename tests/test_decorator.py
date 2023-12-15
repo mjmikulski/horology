@@ -2,6 +2,8 @@ from contextlib import redirect_stdout
 from io import StringIO
 from unittest.mock import Mock, patch
 
+import pytest
+
 from horology import timed
 
 
@@ -74,3 +76,51 @@ class TestDecorator:
             print_str = out.getvalue().strip()
 
         assert print_str == ''
+
+    def test_with_lambda(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        foo = timed(lambda: None)
+
+        with redirect_stdout(out := StringIO()):
+            foo()
+            print_str = out.getvalue().strip()
+
+        assert print_str == '<lambda>: 120 ms'
+
+    def test_with_function_arguments(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        @timed
+        def add(x, y):
+            return x + y
+
+        result = add(5, y=7)
+        assert result == 12
+        assert add.interval == 0.12
+
+    def test_passing_exception(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        @timed
+        def foo():
+            raise ValueError('An error occurred')
+
+        with pytest.raises(ValueError, match='An error occurred'):
+            foo()
+
+        assert foo.interval == 0.12
+
+    def test_printing_exception(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        @timed
+        def foo():
+            raise RuntimeError('An error occurred')
+
+        with redirect_stdout(out := StringIO()):
+            with pytest.raises(RuntimeError):
+                foo()
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'foo: 120 ms (failed)'

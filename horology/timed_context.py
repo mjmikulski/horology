@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from time import perf_counter as counter
 from types import TracebackType
-from typing import Any, Callable, Literal, Optional, Type
+from typing import Any, Callable, Literal, Type
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -43,17 +43,17 @@ class Timing:
 
     def __init__(
             self,
-            name: Optional[str] = None,
+            name: str | None = None,
             *,
             unit: UnitType = 'auto',
-            print_fn: Optional[Callable[..., Any]] = print
+            print_fn: Callable[..., Any] | None = print
     ) -> None:
         self.name = name if name else ""
         self.unit = unit
-        self._print_fn = print_fn if print_fn else lambda _: None
+        self._print_fn = print_fn
 
-        self._start: Optional[float] = None
-        self._interval: Optional[float] = None
+        self._start: float | None = None
+        self._interval: float | None = None
 
     @property
     def interval(self) -> float:
@@ -65,7 +65,7 @@ class Timing:
 
         """
         if self._start is None:
-            raise RuntimeError('`interval` can be invoked only inside a '
+            raise RuntimeError('`interval` can be accessed only inside the '
                                'context or after exiting it.')
 
         if self._interval:  # when the context exited
@@ -79,12 +79,15 @@ class Timing:
 
     def __exit__(
             self,
-            exc_type: Optional[Type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType],
+            exc_type: Type[BaseException] | None,
+            exc_val: BaseException | None,
+            exc_tb: TracebackType | None,
     ) -> Literal[False]:
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
-        print_str = f'{self.name}{t:.3g} {u}'
-        self._print_fn(print_str)  # type: ignore
+        if self._print_fn is not None:
+            print_str = f'{self.name}{t:.3g} {u}'
+            if exc_type is not None:
+                print_str += ' (failed)'
+            self._print_fn(print_str)
         return False

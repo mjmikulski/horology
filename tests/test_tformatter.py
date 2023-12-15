@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from horology.tformatter import UnitType, rescale_time
+from horology.tformatter import UnitType, rescale_time, UNITS
 
 
 class TestTformatter:
@@ -39,3 +39,9 @@ class TestTformatter:
                        "['ns', 'us', 'ms', 's', 'min', 'h', 'd'] or 'auto'"
         with pytest.raises(ValueError, match=re.escape(matching_msg)):
             rescale_time(0.5, 'lustrum')  # type: ignore
+
+    def test_units_order(self) -> None:
+        limit = 0.0
+        for u in UNITS:
+            assert u.limit > limit
+            limit = u.limit

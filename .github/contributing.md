@@ -15,15 +15,31 @@ Create an issue.
 ## How to commit some code?
 1. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) horology.
 2. Create a branch.
-3. Write some useful and beautiful code that follows [PEP8](https://www.python.org/dev/peps/pep-0008/).
-4. Commit and push your changes (in your fork).
-5. Make sure that all tests pass (both unittests and doctests), you can run them all with:
-```bash
-nosetests -vv --with-doctest --doctest-options=+ELLIPSIS
-```
-6. [Create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) 
+3. Create virtual env with conda using latest version of supported python, e.g.:
+    ```bash
+    conda create -n horology python=3.12
+    conda activate horology
+    ```
+4. Install poetry using pip:
+    ```bash
+    pip install poetry
+    ```
+5. Use poetry to install all dev dependencies:
+    ```bash
+    poetry install
+    ```
+6. Write some useful and beautiful code that follows [PEP8](https://www.python.org/dev/peps/pep-0008/).
+7. Write unit tests.
+8. Run mypy and pytest and fix eventual errors:
+    ```bash
+    mypy .
+    pytest
+    ```
+9. Commit and push your changes (in your fork).
+10. [Create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) 
 from your fork to horology.
-7. Wait for my feedback.
+11. Wait for my feedback.
+12. If I accept your changes, I will merge them into the master branch and release with the next release.
 
 ## How to write some documentation?
 Follow numpy style, but no space before a colon ;)
@@ -40,4 +56,4 @@ _adopted from [here](https://chris.beams.io/posts/git-commit#seven-rules)._
 
 
 ## I am open
-Feel free to contact. My email starts with `maciej.mikulski.jr` and ends with `gmail.com`.
+Feel free to connect. My email starts with `maciej.mikulski.jr` and ends with `gmail.com`.

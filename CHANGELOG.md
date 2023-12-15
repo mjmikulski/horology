@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.4.0
+
+### Features and enhancements
+
+- If an exception is raised in a context or in a decorated function, information about time elapsed until
+  the failure is printed like this: `foo: 120 ms (failed)`
+
+### Breaking API changes
+
+- Removed striping of whitespaces in unit name. So now ' h ' is not a valid unit name anymore.
+
+### Fixes
+
+- Proper handling of exceptions was added to timed decorator.
+
+### Tests and deployment
+
+- `ParamSpec` was used to annotate types more precisely in typed decorator.
+- Added 1 new test for time formatter.
+- Added 4 new tests for Timed context.
+- Added 4 new tests for timed decorator.
+- Restored 3 tests with actual delays with sleep and added rerun mechanism to contain their flakiness.
+
+### Fun
+
+- New image
+- New MIT license badge
+
+### Supported Python versions
+
+- Removed support for 3.8 and 3.9.
+- Added support for 3.12.
+
+Supported python versions are 3.10-3.12.
+
 ## 1.3.0
 
 ### Breaking API changes
