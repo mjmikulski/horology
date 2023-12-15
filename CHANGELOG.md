@@ -18,6 +18,11 @@
 - Added 4 new test for timed decorator.
 - Restored 3 tests with actual delays with sleep.
 
+### Fun
+
+- New image
+- New MIT license badge
+
 ### Supported Python versions
 
 - Removed support for 3.8 and 3.9.
