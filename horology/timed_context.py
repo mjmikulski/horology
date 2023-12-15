@@ -86,5 +86,8 @@ class Timing:
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
         if self._print_fn is not None:
-            self._print_fn(f'{self.name}{t:.3g} {u}')
+            print_str = f'{self.name}{t:.3g} {u}'
+            if exc_type is not None:
+                print_str += ' (failed)'
+            self._print_fn(print_str)
         return False

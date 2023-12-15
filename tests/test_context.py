@@ -75,8 +75,8 @@ class TestContext:
                 exception_raised = True
             print_str = out.getvalue().strip()
 
-        assert exception_raised, 'Exception should not be suppressed'
-        assert print_str == '500 ms', "Time should be recorded despite the exception"
+        assert exception_raised
+        assert print_str == '500 ms (failed)'
 
     def test_custom_print_function(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0.12]
@@ -99,7 +99,7 @@ class TestContext:
                 pass
             print_str = out.getvalue().strip()
 
-        assert print_str == '', "Nothing should be printed when print_fn is None"
+        assert print_str == ''
 
     def test_error_when_accessing_interval_outside_context(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0.12]

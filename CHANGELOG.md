@@ -4,19 +4,24 @@
 
 ### Features and enhancements
 
-- Proper handling of exceptions was added to timed decorator.
+- If an exception is raised in a context or in a decorated function, information about time elapsed until
+  the failure is printed like this: `foo: 120 ms (failed)`
 
 ### Breaking API changes
 
 - Removed striping of whitespaces in unit name. So now ' h ' is not a valid unit name anymore.
 
+### Fixes
+
+- Proper handling of exceptions was added to timed decorator.
+
 ### Tests and deployment
 
-- ParamSpec was used to annotate types more precisely in typed decorator.
+- `ParamSpec` was used to annotate types more precisely in typed decorator.
 - Added 1 new test for time formatter.
 - Added 4 new tests for Timed context.
-- Added 4 new test for timed decorator.
-- Restored 3 tests with actual delays with sleep.
+- Added 4 new tests for timed decorator.
+- Restored 3 tests with actual delays with sleep and added rerun mechanism to contain their flakiness.
 
 ### Fun
 
