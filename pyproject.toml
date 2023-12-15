@@ -27,6 +27,7 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 pytest = "7.4.*"
 mypy = "1.7.*"
+pytest-rerunfailures = "13.*"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
