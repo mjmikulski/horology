@@ -1,5 +1,5 @@
 from math import inf
-from typing import Literal, NamedTuple, Tuple, cast
+from typing import Literal, NamedTuple, cast
 
 UnitType = Literal['a', 'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd']
 
@@ -24,7 +24,7 @@ UNITS = [
 def rescale_time(
         interval: float,
         unit: UnitType,
-) -> Tuple[float, UnitType]:
+) -> tuple[float, UnitType]:
     """Rescale the time interval using the provided unit
 
     Parameters
@@ -58,7 +58,7 @@ def rescale_time(
         If the unit provided is unknown.
 
     """
-    unit = cast(UnitType, unit.lower().strip())
+    unit = cast(UnitType, unit.lower())
 
     for u in UNITS:
         if unit == u.name or (unit in ('a', 'auto') and interval < u.limit):
