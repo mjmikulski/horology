@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Callable, Iterable, List, Optional
+from typing import Any, Callable, Iterable
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -21,7 +21,7 @@ class Timed:
     iteration_print_fn: Callable, optional
         Function that is called after each iteration to print time
         of that iteration. Use `None` to disable printing after each
-        iteration. You can provide e.g. `logger.debug`. By default
+        iteration. You can provide e.g. `logger.debug`. By default,
         the built-in `print` function is used.
     summary_print_fn: Callable, optional
         Function that is called to print the summary. Use `None` to
@@ -62,8 +62,8 @@ class Timed:
             iterable: Iterable,
             *,
             unit: UnitType = 'a',
-            iteration_print_fn: Optional[Callable] = print,
-            summary_print_fn: Optional[Callable] = print
+            iteration_print_fn: Callable[..., Any] | None = print,
+            summary_print_fn: Callable[..., Any] | None = print
     ) -> None:
 
         self.iterable = iterable
@@ -71,9 +71,9 @@ class Timed:
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
 
-        self.intervals: List[float] = []
-        self._start: Optional[float] = None
-        self._last: Optional[float] = None
+        self.intervals: list[float] = []
+        self._start: float | None = None
+        self._last: float | None = None
 
     def __iter__(self) -> Timed:
         self._start = counter()
@@ -116,7 +116,8 @@ class Timed:
     def print_summary(self) -> None:
         """ Print statistics of times elapsed in each iteration
 
-        It is called automatically when the iteration ends.
+        It is called automatically when the iteration over the iterable
+        finishes.
 
         Use `summary_print_fn` argument in the constructor to control
         if and where the summary is printed.

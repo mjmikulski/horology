@@ -2,6 +2,15 @@
 
 ## 1.4.0 alpha
 
+### Breaking API changes
+- Removed striping of whitespaces in unit name.
+
+### Tests and deployment
+
+- Added 4 new tests to timed context.
+- Added 1 new test in time formatter.
+- Restore 3 tests with actual delays.
+
 ### Supported Python versions
 
 - Removed support for 3.8 and 3.9.

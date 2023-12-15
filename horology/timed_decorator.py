@@ -1,6 +1,6 @@
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, Callable, Optional, Protocol, TypeVar, overload
+from typing import Any, Callable, Protocol, TypeVar, overload
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -9,7 +9,7 @@ F = TypeVar('F', bound=Callable)
 
 class CallableWithInterval(Protocol[F]):
     """
-    When support for python version 3.9 and 3.9 is dropped, this should
+    When support for python version 3.8 and 3.9 is dropped, this should
     be refactored with typing.ParamSpec
 
     References
@@ -28,18 +28,18 @@ def timed(f: F) -> CallableWithInterval[F]: ...  # Bare decorator usage
 @overload
 def timed(
         *,
-        name: Optional[str] = None,
+        name: str | None = None,
         unit: UnitType = 'auto',
-        print_fn: Optional[Callable[..., Any]] = print
+        print_fn: Callable[..., Any] | None = print
 ) -> Callable[[F], CallableWithInterval[F]]: ...  # Decorator with arguments
 
 
 def timed(
-        f: Optional[Callable] = None,
+        f: Callable[..., Any] | None = None,
         *,
-        name: Optional[str] = None,
+        name: str | None = None,
         unit: UnitType = 'auto',
-        print_fn: Optional[Callable[..., Any]] = print):
+        print_fn: Callable[..., Any] | None = print):
     """Decorator that prints time of execution of the decorated function
 
     Parameters
