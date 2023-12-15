@@ -1,28 +1,26 @@
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, Callable, Protocol, TypeVar, overload
+from typing import Any, Callable, ParamSpec, Protocol, overload
 
 from horology.tformatter import UnitType, rescale_time
 
-F = TypeVar('F', bound=Callable)
+P = ParamSpec('P')
 
 
-class CallableWithInterval(Protocol[F]):
-    """
-    When support for python version 3.8 and 3.9 is dropped, this should
-    be refactored with typing.ParamSpec
+class CallableWithInterval(Protocol[P]):
+    """Protocol to represent a callable with interval attribute.
 
     References
     ----------
     [PEP 612](https://peps.python.org/pep-0612/)
     """
     interval: float
-    __call__: F
+    __call__: Callable[P, Any]
     __name__: str
 
 
 @overload
-def timed(f: F) -> CallableWithInterval[F]: ...  # Bare decorator usage
+def timed(f: Callable[P, Any]) -> CallableWithInterval[P]: ...  # Bare decorator usage
 
 
 @overload
@@ -31,11 +29,11 @@ def timed(
         name: str | None = None,
         unit: UnitType = 'auto',
         print_fn: Callable[..., Any] | None = print
-) -> Callable[[F], CallableWithInterval[F]]: ...  # Decorator with arguments
+) -> Callable[[Callable[P, Any]], CallableWithInterval[P]]: ...  # Decorator with arguments
 
 
 def timed(
-        f: Callable[..., Any] | None = None,
+        f: Callable[P, Any] | None = None,
         *,
         name: str | None = None,
         unit: UnitType = 'auto',
@@ -111,17 +109,26 @@ def timed(
         @wraps(_f)
         def wrapped(*args, **kwargs):
             start = counter()
-            return_value = _f(*args, **kwargs)
-            interval = counter() - start
-            wrapped.interval = interval
+            exception = None
+            try:
+                return_value = _f(*args, **kwargs)
+            except Exception as e:
+                exception = e
+            finally:
+                interval = counter() - start
+                wrapped.interval = interval
 
             if print_fn is not None:
                 nonlocal name
-                if name is None:
-                    name = _f.__name__ + ': '
+                name = _f.__name__ + ': ' if name is None else name
                 t, u = rescale_time(interval, unit=unit)
                 print_str = f'{name}{t:.3g} {u}'
+                if exception is not None:
+                    print_str += ' (failed)'
                 print_fn(print_str)
+
+            if exception is not None:
+                raise exception
 
             return return_value
 

@@ -1,15 +1,22 @@
 # Changelog
 
-## 1.4.0 alpha
+## 1.4.0
+
+### Features and enhancements
+
+- Proper handling of exceptions was added to timed decorator.
 
 ### Breaking API changes
-- Removed striping of whitespaces in unit name.
+
+- Removed striping of whitespaces in unit name. So now ' h ' is not a valid unit name anymore.
 
 ### Tests and deployment
 
-- Added 4 new tests to timed context.
-- Added 1 new test in time formatter.
-- Restore 3 tests with actual delays.
+- ParamSpec was used to annotate types more precisely in typed decorator.
+- Added 1 new test for time formatter.
+- Added 4 new tests for Timed context.
+- Added 4 new test for timed decorator.
+- Restored 3 tests with actual delays with sleep.
 
 ### Supported Python versions
 
