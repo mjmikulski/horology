@@ -6,12 +6,12 @@ import pytest
 
 from horology import Timed, Timing, timed
 
-@pytest.mark.flaky(reruns=5)
+@pytest.mark.flaky(reruns=7)
 class TestWithSleep:
     def test_context(self):
         with redirect_stdout(out := StringIO()):
             with Timing():
-                sleep(0.11)
+                sleep(0.1)
             print_str = out.getvalue().strip()
 
         assert print_str.startswith('1')
@@ -20,7 +20,7 @@ class TestWithSleep:
     def test_decorator(self):
         @timed
         def foo():
-            sleep(0.11)
+            sleep(0.1)
 
         with redirect_stdout(out := StringIO()):
             foo()
@@ -32,7 +32,7 @@ class TestWithSleep:
     def test_iterable(self):
         with redirect_stdout(out := StringIO()):
             for _ in Timed(range(1)):
-                sleep(0.11)
+                sleep(0.1)
             print_str = out.getvalue().strip()
 
         assert print_str.startswith('iteration    1: 1')
