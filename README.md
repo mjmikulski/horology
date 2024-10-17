@@ -3,8 +3,8 @@
 [![PyPI version](https://badge.fury.io/py/horology.svg)](https://badge.fury.io/py/horology)
 [![tests](https://github.com/mjmikulski/horology/actions/workflows/tests.yaml/badge.svg)](https://github.com/mjmikulski/horology/actions/workflows/tests.yaml)
 [![codeql](https://github.com/mjmikulski/horology/actions/workflows/codeql.yaml/badge.svg)](https://github.com/mjmikulski/horology/actions/workflows/codeql.yaml)
-[![PythonVersion](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://pypi.org/project/horology/)
-[![PythonVersion](https://img.shields.io/badge/OS-linux%20%7C%20windows%20%7C%20macos-green)](https://pypi.org/project/horology/)
+[![PythonVersion](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://pypi.org/project/horology/)
+[![OperatingSystems](https://img.shields.io/badge/OS-linux%20%7C%20windows%20%7C%20macos-green)](https://pypi.org/project/horology/)
 [![Downloads](https://pepy.tech/badge/horology/month)](https://pepy.tech/project/horology)
 [![License: MIT](https://img.shields.io/badge/License-MIT-cyan.svg)](https://opensource.org/licenses/MIT)
 
@@ -17,6 +17,7 @@ Conveniently measures the time of your loops, contexts and functions.
 
 | horology version | compatible python |
 |------------------|-------------------|
+| 1.4.1            | 3.10-3.13         |
 | 1.4              | 3.10-3.12         |
 | 1.3              | 3.8-3.11          |
 | 1.2              | 3.6-3.9           |

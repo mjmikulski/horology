@@ -1,5 +1,20 @@
 # Changelog
 
+
+## 1.4.1
+
+### Tests and deployment
+
+- Dev-dependencies were updated.
+- CodeQL configuration was cleaned and updated to new versions.
+- Minor tests tweaks.
+
+### Supported Python versions
+
+- Added support for 3.13.
+
+Supported python versions are 3.10-3.13.
+
 ## 1.4.0
 
 ### Features and enhancements
