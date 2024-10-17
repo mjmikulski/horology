@@ -28,7 +28,7 @@ class Timed:
         disable printing the summary. You can provide e.g.
         `logger.info`. By default, the built-in `print` function is used.
 
-    Properties
+    Attributes
     ----------
     num_iterations: int
         How many iteration were executed.
