@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.2
+
+### Supported Python versions
+
+- Added support for 3.14.
+
+Supported python versions are 3.10-3.14.
 
 ## 1.4.1
 
