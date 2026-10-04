@@ -3,6 +3,7 @@ from __future__ import annotations
 from statistics import mean, median, stdev
 from time import perf_counter as counter
 from typing import Any, Callable, Generic, Iterable, Iterator, TypeVar
+from warnings import warn
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -106,7 +107,9 @@ class Timed(Generic[T]):
 
     @property
     def n(self) -> int:
-        "Deprecated"
+        """Deprecated, use `num_iterations` instead"""
+        warn('`n` is deprecated and will be removed in horology 2.0, '
+             'use `num_iterations` instead', DeprecationWarning, stacklevel=2)
         return self.num_iterations
 
     @property

@@ -3,6 +3,8 @@ from io import StringIO
 from typing import TYPE_CHECKING
 from unittest.mock import Mock, patch
 
+import pytest
+
 from horology import Timed
 
 if TYPE_CHECKING:
@@ -95,3 +97,13 @@ class TestTimedIterableTest:
                 assert_type(animal, str)
 
         assert animals == ['cat', 'dog']
+
+    def test_n_is_deprecated(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 2]
+
+        timed_range = Timed(range(2), iteration_print_fn=None, summary_print_fn=None)
+        for _ in timed_range:
+            pass
+
+        with pytest.warns(DeprecationWarning, match='num_iterations'):
+            assert timed_range.n == 2
