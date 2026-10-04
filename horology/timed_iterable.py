@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Generic, Iterable, Iterator, TypeVar
 
 from horology.tformatter import UnitType, rescale_time
 
+T = TypeVar('T')
 
-class Timed:
+
+class Timed(Generic[T]):
     """ Wrapper to an iterable that measures time of each iteration
 
     Parameters
@@ -59,7 +61,7 @@ class Timed:
 
     def __init__(
             self,
-            iterable: Iterable,
+            iterable: Iterable[T],
             *,
             unit: UnitType = 'a',
             iteration_print_fn: Callable[..., Any] | None = print,
@@ -74,13 +76,14 @@ class Timed:
         self.intervals: list[float] = []
         self._start: float | None = None
         self._last: float | None = None
+        self._iterator: Iterator[T]
 
-    def __iter__(self) -> Timed:
+    def __iter__(self) -> Timed[T]:
         self._start = counter()
-        self.iterable = iter(self.iterable)
+        self._iterator = iter(self.iterable)
         return self
 
-    def __next__(self):
+    def __next__(self) -> T:
         try:
             now = counter()
             if self._last is not None:
@@ -91,7 +94,7 @@ class Timed:
 
             self._last = now
 
-            return next(self.iterable)
+            return next(self._iterator)
 
         except StopIteration:
             self.print_summary()

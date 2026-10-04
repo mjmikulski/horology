@@ -1,8 +1,12 @@
 from contextlib import redirect_stdout
 from io import StringIO
+from typing import TYPE_CHECKING
 from unittest.mock import Mock, patch
 
 from horology import Timed
+
+if TYPE_CHECKING:
+    from typing_extensions import assert_type
 
 
 @patch('horology.timed_iterable.counter')
@@ -79,3 +83,15 @@ class TestTimedIterableTest:
 
         assert lines == ['cat', 'dog', 'parrot']
         assert T.total == 30
+
+    def test_item_type_is_preserved(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 2]
+
+        animals = []
+        timed_animals = Timed(['cat', 'dog'], iteration_print_fn=None, summary_print_fn=None)
+        for animal in timed_animals:
+            animals.append(animal)
+            if TYPE_CHECKING:  # checked by mypy, not at runtime
+                assert_type(animal, str)
+
+        assert animals == ['cat', 'dog']
