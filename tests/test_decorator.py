@@ -1,10 +1,14 @@
 from contextlib import redirect_stdout
 from io import StringIO
+from typing import TYPE_CHECKING
 from unittest.mock import Mock, patch
 
 import pytest
 
 from horology import timed
+
+if TYPE_CHECKING:
+    from typing_extensions import assert_type
 
 
 @patch('horology.timed_decorator.counter')
@@ -124,3 +128,24 @@ class TestDecorator:
             print_str = out.getvalue().strip()
 
         assert print_str == 'foo: 120 ms (failed)'
+
+    def test_return_type_is_preserved(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12, 0.24, 0.36]
+
+        @timed(print_fn=None)
+        def add(x: int, y: int) -> int:
+            return x + y
+
+        @timed
+        def greet(name: str) -> str:
+            return f'Hello {name}'
+
+        with redirect_stdout(StringIO()):
+            total = add(5, y=7)
+            greeting = greet('cat')
+
+        assert total == 12
+        assert greeting == 'Hello cat'
+        if TYPE_CHECKING:  # checked by mypy, not at runtime
+            assert_type(total, int)
+            assert_type(greeting, str)

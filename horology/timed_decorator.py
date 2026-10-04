@@ -1,13 +1,15 @@
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, Callable, ParamSpec, Protocol, overload
+from typing import Any, Callable, ParamSpec, Protocol, TypeVar, cast, overload
 
 from horology.tformatter import UnitType, rescale_time
 
 P = ParamSpec('P')
+R = TypeVar('R')
+R_co = TypeVar('R_co', covariant=True)
 
 
-class CallableWithInterval(Protocol[P]):
+class CallableWithInterval(Protocol[P, R_co]):
     """Protocol to represent a callable with interval attribute.
 
     References
@@ -15,12 +17,13 @@ class CallableWithInterval(Protocol[P]):
     [PEP 612](https://peps.python.org/pep-0612/)
     """
     interval: float
-    __call__: Callable[P, Any]
     __name__: str
+
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> R_co: ...
 
 
 @overload
-def timed(f: Callable[P, Any]) -> CallableWithInterval[P]: ...  # Bare decorator usage
+def timed(f: Callable[P, R]) -> CallableWithInterval[P, R]: ...  # Bare decorator usage
 
 
 @overload
@@ -29,15 +32,16 @@ def timed(
         name: str | None = None,
         unit: UnitType = 'auto',
         print_fn: Callable[..., Any] | None = print
-) -> Callable[[Callable[P, Any]], CallableWithInterval[P]]: ...  # Decorator with arguments
+) -> Callable[[Callable[P, R]], CallableWithInterval[P, R]]: ...  # Decorator with arguments
 
 
 def timed(
-        f: Callable[P, Any] | None = None,
+        f: Callable[P, R] | None = None,
         *,
         name: str | None = None,
         unit: UnitType = 'auto',
-        print_fn: Callable[..., Any] | None = print):
+        print_fn: Callable[..., Any] | None = print
+) -> CallableWithInterval[P, R] | Callable[[Callable[P, R]], CallableWithInterval[P, R]]:
     """Decorator that prints time of execution of the decorated function
 
     Parameters
@@ -105,9 +109,9 @@ def timed(
 
     """
 
-    def decorator(_f):
+    def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
         @wraps(_f)
-        def wrapped(*args, **kwargs):
+        def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
             start = counter()
             exception = None
             try:
@@ -116,7 +120,7 @@ def timed(
                 exception = e
             finally:
                 interval = counter() - start
-                wrapped.interval = interval
+                timed_f.interval = interval
 
             if print_fn is not None:
                 nonlocal name
@@ -132,7 +136,8 @@ def timed(
 
             return return_value
 
-        return wrapped
+        timed_f = cast(CallableWithInterval[P, R], wrapped)
+        return timed_f
 
     if f is None:  # used with ()
         return decorator
