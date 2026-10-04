@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Iterable, Iterator
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Any, Callable, Generic, Iterable, Iterator, TypeVar
+from typing import Any, Generic, TypeVar
 from warnings import warn
 
 from horology.tformatter import UnitType, rescale_time

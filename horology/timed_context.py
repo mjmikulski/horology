@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from time import perf_counter as counter
 from types import TracebackType
-from typing import Any, Callable, Literal, Type
+from typing import Any, Literal
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -79,7 +80,7 @@ class Timing:
 
     def __exit__(
             self,
-            exc_type: Type[BaseException] | None,
+            exc_type: type[BaseException] | None,
             exc_val: BaseException | None,
             exc_tb: TracebackType | None,
     ) -> Literal[False]:

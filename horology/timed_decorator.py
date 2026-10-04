@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, Callable, ParamSpec, Protocol, TypeVar, cast, overload
+from typing import Any, ParamSpec, Protocol, TypeVar, cast, overload
 
 from horology.tformatter import UnitType, rescale_time
 
