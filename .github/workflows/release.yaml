@@ -1,0 +1,87 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions: {}
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Check that tag matches package version
+        run: |
+          python - <<'EOF'
+          import os, re, tomllib
+
+          tag = os.environ['GITHUB_REF_NAME'].removeprefix('v')
+          with open('pyproject.toml', 'rb') as f:
+              pyproject_version = tomllib.load(f)['project']['version']
+          with open('horology/__init__.py') as f:
+              init_version = re.search(r"__version__ = '(.+)'", f.read()).group(1)
+
+          print(f'tag: {tag}, pyproject.toml: {pyproject_version}, __init__.py: {init_version}')
+          if not tag == pyproject_version == init_version:
+              raise SystemExit('Tag does not match package version')
+          EOF
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/horology/
+    permissions:
+      id-token: write  # Trusted Publishing to PyPI and attestations
+
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # create the GitHub Release
+
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
