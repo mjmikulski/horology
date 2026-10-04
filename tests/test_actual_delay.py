@@ -6,6 +6,7 @@ import pytest
 
 from horology import Timed, Timing, timed
 
+
 @pytest.mark.flaky(reruns=7)
 class TestWithSleep:
     def test_context(self):

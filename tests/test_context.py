@@ -101,7 +101,9 @@ class TestContext:
 
         assert print_str == ''
 
-    def test_error_when_accessing_interval_outside_context(self, counter_mock: Mock) -> None:
+    def test_error_when_accessing_interval_outside_context(
+            self, counter_mock: Mock
+    ) -> None:
         counter_mock.side_effect = [0, 0.12]
         timing_instance = Timing()
 

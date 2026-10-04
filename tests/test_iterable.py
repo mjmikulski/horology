@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @patch('horology.timed_iterable.counter')
-class TestTimedIterableTest:
+class TestTimedIterable:
 
     def test_no_iter(self, counter_mock: Mock) -> None:
         with redirect_stdout(out := StringIO()):
@@ -78,19 +78,21 @@ class TestTimedIterableTest:
         counter_mock.side_effect = [0, 0, 10, 20, 30]
 
         with redirect_stdout(out := StringIO()):
-            T = Timed(['cat', 'dog', 'parrot'], iteration_print_fn=None, summary_print_fn=None)
-            for a in T:
+            timed_animals = Timed(['cat', 'dog', 'parrot'],
+                                  iteration_print_fn=None, summary_print_fn=None)
+            for a in timed_animals:
                 print(a)
             lines = out.getvalue().strip().split('\n')
 
         assert lines == ['cat', 'dog', 'parrot']
-        assert T.total == 30
+        assert timed_animals.total == 30
 
     def test_item_type_is_preserved(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 1, 2]
 
         animals = []
-        timed_animals = Timed(['cat', 'dog'], iteration_print_fn=None, summary_print_fn=None)
+        timed_animals = Timed(['cat', 'dog'],
+                              iteration_print_fn=None, summary_print_fn=None)
         for animal in timed_animals:
             animals.append(animal)
             if TYPE_CHECKING:  # checked by mypy, not at runtime
