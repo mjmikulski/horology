@@ -107,3 +107,17 @@ class TestTimedIterableTest:
 
         with pytest.warns(DeprecationWarning, match='num_iterations'):
             assert timed_range.n == 2
+
+    def test_iterating_again(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3, 10, 10, 20, 40]
+        timed_animals = Timed(['cat', 'dog'], iteration_print_fn=None)
+
+        with redirect_stdout(out := StringIO()):
+            assert list(timed_animals) == ['cat', 'dog']
+            assert list(timed_animals) == ['cat', 'dog']
+            lines = out.getvalue().strip().split('\n')
+
+        assert lines[-3] == 'total 2 iterations in 30 s'
+        assert lines[-2] == 'min/median/max: 10/15/20 s'
+        assert timed_animals.intervals == [10, 20]
+        assert timed_animals.total == 30

@@ -80,6 +80,8 @@ class Timed(Generic[T]):
         self._iterator: Iterator[T]
 
     def __iter__(self) -> Timed[T]:
+        self.intervals = []
+        self._last = None
         self._start = counter()
         self._iterator = iter(self.iterable)
         return self
