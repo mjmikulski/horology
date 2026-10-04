@@ -37,3 +37,18 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+
+  # Single required status check for branch protection, independent of
+  # the matrix. It must run always, as a skipped check counts as passed.
+  tests-passed:
+    name: tests passed
+    if: always()
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check that all test jobs passed
+        env:
+          RESULT: ${{ needs.build.result }}
+        run: |
+          test "$RESULT" = success
