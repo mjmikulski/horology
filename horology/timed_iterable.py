@@ -13,7 +13,7 @@ class Timed:
     Parameters
     ----------
     iterable: Iterable
-        Object that should we wrapped.
+        Object that should be wrapped.
     unit: str, optional
         Time unit used to print elapsed time. Possible values:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
@@ -31,12 +31,12 @@ class Timed:
     Attributes
     ----------
     num_iterations: int
-        How many iteration were executed.
+        How many iterations were executed.
     total: float
         Total time elapsed in seconds.
 
-    Example
-    -------
+    Examples
+    --------
     Basic usage
         ```
         from horology import Timed

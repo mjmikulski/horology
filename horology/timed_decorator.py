@@ -46,7 +46,7 @@ def timed(
         The function which execution time should be measured.
     name: str or None, optional
         String that should be printed as the function name. By default,
-        the f.__name__ proceeded by a colon and space is used. See
+        the f.__name__ followed by a colon and space is used. See
         examples below.
     unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
         Time unit used to print elapsed time. Use 'a' or 'auto' for

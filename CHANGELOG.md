@@ -45,7 +45,7 @@ Supported python versions are 3.10-3.13.
 
 ### Breaking API changes
 
-- Removed striping of whitespaces in unit name. So now ' h ' is not a valid unit name anymore.
+- Removed stripping of whitespace in unit name. So now ' h ' is not a valid unit name anymore.
 
 ### Fixes
 

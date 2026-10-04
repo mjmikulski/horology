@@ -25,7 +25,7 @@ Conveniently measures the time of your loops, contexts and functions.
 | 1.2              | 3.6-3.9           |
 | 1.1              | 3.6-3.8           |
 
-Horology can be installed with PIP. It has no dependencies.
+Horology can be installed with pip. It has no dependencies.
 
 ```
 pip install horology
@@ -113,7 +113,7 @@ Processing took 0.185 s
 
 #### Quick example
 
-Just wrap your code using a `with` statement
+Just wrap your code using a `with` statement:
 
 ```python
 from horology import Timing
@@ -130,7 +130,7 @@ Important calculations: 12.4 s
 
 #### Customization
 
-You can suppress default printing and directly use measured time (also within context)
+You can suppress default printing and directly use measured time (also within the context):
 
 ```python
 with Timing(print_fn=None) as t:
@@ -148,9 +148,9 @@ override this by setting the `unit` argument with one of these names:
 
 ## Contributions
 
-Contributions are welcomed, see [contribution guide](.github/contributing.md).
+Contributions are welcome, see [contribution guide](.github/contributing.md).
 
 ## Internals
 
-Horology internally measures time with `perf_counter` which provides the *highest available resolution,*
+Horology internally measures time with `perf_counter`, which provides the *highest available resolution,*
 see [docs](https://docs.python.org/3/library/time.html#time.perf_counter).

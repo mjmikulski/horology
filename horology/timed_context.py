@@ -8,7 +8,7 @@ from horology.tformatter import UnitType, rescale_time
 
 
 class Timing:
-    """Context manager that measures time elapsed with the context
+    """Context manager that measures time elapsed within the context
 
     Use `interval` property to get the time elapsed.
 
@@ -27,8 +27,8 @@ class Timing:
         provide e.g. `logger.info`. By default, the built-in `print`
         function is used.
 
-    Example
-    -------
+    Examples
+    --------
     Basic usage
         ```
         from horology import Timing
@@ -60,7 +60,7 @@ class Timing:
         """Time elapsed in seconds
 
         If still in the context, returns time elapsed from the moment
-        of entering to the context. If the context has been already
+        of entering the context. If the context has been already
         left, returns the total time spent in the context.
 
         """
