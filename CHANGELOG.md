@@ -1,5 +1,15 @@
 # Changelog
 
+
+## 1.4.3
+
+### Supported Python versions
+
+- Added support for 3.15.
+
+Supported python versions are 3.10-3.15.
+
+
 ## 1.4.2
 
 ### Supported Python versions
