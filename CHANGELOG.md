@@ -7,6 +7,7 @@
 - Dev-dependencies and GitHub Actions were updated.
 - Package metadata was migrated to the PEP 621 `[project]` table.
 - Scheduled CodeQL runs were dropped.
+- Releases are published to PyPI from GitHub Actions via trusted publishing, with attestations.
 
 ### Supported Python versions
 
