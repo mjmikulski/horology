@@ -69,7 +69,7 @@ class Timed(Generic[T]):
     ) -> None:
 
         self.iterable = iterable
-        self.unit = unit
+        self.unit: UnitType = unit
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
 

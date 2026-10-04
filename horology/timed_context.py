@@ -49,7 +49,7 @@ class Timing:
             print_fn: Callable[..., Any] | None = print
     ) -> None:
         self.name = name if name else ""
-        self.unit = unit
+        self.unit: UnitType = unit
         self._print_fn = print_fn
 
         self._start: float | None = None
