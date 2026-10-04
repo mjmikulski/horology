@@ -18,6 +18,7 @@ classifiers = [
     'Programming Language :: Python :: 3.13',
     'Programming Language :: Python :: 3.14',
     'Programming Language :: Python :: 3.15',
+    'Typing :: Typed',
     'Topic :: Utilities',
     'Topic :: Software Development :: Libraries',
     'Topic :: Software Development :: Testing',
