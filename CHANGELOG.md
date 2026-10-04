@@ -1,14 +1,18 @@
 # Changelog
 
-
 ## 1.4.3
+
+### Tests and deployment
+
+- Dev-dependencies and GitHub Actions were updated.
+- Package metadata was migrated to the PEP 621 `[project]` table.
+- Scheduled CodeQL runs were dropped.
 
 ### Supported Python versions
 
 - Added support for 3.15.
 
 Supported python versions are 3.10-3.15.
-
 
 ## 1.4.2
 
