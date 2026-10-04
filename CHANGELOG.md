@@ -2,12 +2,27 @@
 
 ## 1.4.3
 
+### Features and enhancements
+
+- Type hints are now visible to type checkers in projects using horology: `py.typed` marker and `__all__` were added.
+- `timed` decorator preserves the return type of the decorated function.
+- `Timed` is generic, so the type of iterated items is preserved.
+
+### Fixes
+
+- Iterating again over the same `Timed` object resets its statistics instead of mixing both loops.
+
+### Deprecations
+
+- `Timed.n` emits `DeprecationWarning` and will be removed in 2.0. Use `Timed.num_iterations` instead.
+
 ### Tests and deployment
 
 - Dev-dependencies and GitHub Actions were updated.
 - Package metadata was migrated to the PEP 621 `[project]` table.
 - Scheduled CodeQL runs were dropped.
 - Releases are published to PyPI from GitHub Actions via trusted publishing, with attestations.
+- Type hints of return values and iterated items are checked in tests.
 
 ### Supported Python versions
 
