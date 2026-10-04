@@ -2,6 +2,9 @@ name: horology tests
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
 
   build:
