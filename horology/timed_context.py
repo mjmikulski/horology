@@ -69,7 +69,7 @@ class Timing:
             raise RuntimeError('`interval` can be accessed only inside the '
                                'context or after exiting it.')
 
-        if self._interval:  # when the context exited
+        if self._interval is not None:  # when the context exited
             return self._interval
         else:  # when still in the context
             return counter() - self._start
@@ -85,7 +85,7 @@ class Timing:
             exc_tb: TracebackType | None,
     ) -> Literal[False]:
         self._interval = self.interval
-        t, u = rescale_time(self.interval, self.unit)
+        t, u = rescale_time(self._interval, self.unit)
         if self._print_fn is not None:
             print_str = f'{self.name + " " if self.name else ""}{t:.3g} {u}'
             if exc_type is not None:

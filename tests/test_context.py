@@ -117,3 +117,15 @@ class TestContext:
 
         # Accessing interval after context should not raise an error
         _ = timing_instance.interval
+
+    def test_zero_interval(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [5.0, 5.0]
+
+        with redirect_stdout(out := StringIO()):
+            with Timing() as t:
+                pass
+            print_str = out.getvalue().strip()
+
+        assert print_str == '0 ns'
+        assert t.interval == 0
+        assert counter_mock.call_count == 2
