@@ -72,8 +72,7 @@ for x in Timed(animals, unit='ms',
     feed(x)
 ```
 
-With `sparkline=True`, the summary ends with a sparkline of iteration times, e.g. `▁▁█`. It is shown for 2 or more
-iterations, and long runs are averaged into at most 50 characters.
+With `sparkline=True`, the summary ends with a sparkline of iteration times, e.g. `▄▁▁█▁`. 
 
 ### Timing a function with a `@timed` decorator
 
