@@ -159,3 +159,12 @@ class TestContext:
             print_str = out.getvalue().strip()
 
         assert print_str == '500 ms (failed)'
+
+    def test_exception_note(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.5]
+
+        with pytest.raises(ValueError) as exc_info:
+            with Timing(name='Loading:', print_fn=None):
+                raise ValueError('Test Exception')
+
+        assert exc_info.value.__notes__ == ['horology: Loading: 500 ms (failed)']

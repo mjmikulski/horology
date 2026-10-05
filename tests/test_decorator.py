@@ -200,3 +200,27 @@ class TestDecorator:
 
         assert print_str == 'foo: 300 ms (failed)'
         assert foo.interval == 0.3
+
+    def test_exception_note(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        @timed(print_fn=None)
+        def foo():
+            raise ValueError('An error occurred')
+
+        with pytest.raises(ValueError) as exc_info:
+            foo()
+
+        assert exc_info.value.__notes__ == ['horology: foo: 120 ms (failed)']
+
+    def test_async_exception_note(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.3]
+
+        @timed(name='Fetching:', print_fn=None)
+        async def fetch() -> None:
+            raise TimeoutError
+
+        with pytest.raises(TimeoutError) as exc_info:
+            asyncio.run(fetch())
+
+        assert exc_info.value.__notes__ == ['horology: Fetching: 300 ms (failed)']

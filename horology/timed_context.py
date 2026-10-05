@@ -28,6 +28,10 @@ class Timing:
         provide e.g. `logger.info`. By default, the built-in `print`
         function is used.
 
+    If an exception is raised within the context, the time elapsed is
+    added to the exception as a note, so it is shown in the traceback,
+    e.g. 'horology: Doing x: 1.02 s (failed)'.
+
     Examples
     --------
     Basic usage
@@ -92,10 +96,11 @@ class Timing:
     ) -> Literal[False]:
         self._interval = self.interval
         t, u = rescale_time(self._interval, self.unit)
+        print_str = f'{self.name + " " if self.name else ""}{t:.3g} {u}'
+        if exc_val is not None:
+            print_str += ' (failed)'
+            exc_val.add_note(f'horology: {print_str}')
         if self._print_fn is not None:
-            print_str = f'{self.name + " " if self.name else ""}{t:.3g} {u}'
-            if exc_type is not None:
-                print_str += ' (failed)'
             self._print_fn(print_str)
         return False
 

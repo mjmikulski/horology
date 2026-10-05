@@ -64,6 +64,10 @@ def timed(
         disable printing anything. You can provide e.g. `logger.info`.
         By default, the built-in `print` function is used.
 
+    If the function raises an exception, the time elapsed is added to
+    the exception as a note, so it is shown in the traceback, e.g.
+    'horology: foo: 1.02 s (failed)'.
+
     Attributes
     ----------
     interval: float
@@ -124,14 +128,15 @@ def timed(
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
         label = _f.__name__ + ':' if name is None else name
 
-        def report(start: float, failed: bool) -> None:
+        def report(start: float, exception: Exception | None = None) -> None:
             interval = counter() - start
             timed_f.interval = interval
+            t, u = rescale_time(interval, unit=unit)
+            print_str = f'{label + " " if label else ""}{t:.3g} {u}'
+            if exception is not None:
+                print_str += ' (failed)'
+                exception.add_note(f'horology: {print_str}')
             if print_fn is not None:
-                t, u = rescale_time(interval, unit=unit)
-                print_str = f'{label + " " if label else ""}{t:.3g} {u}'
-                if failed:
-                    print_str += ' (failed)'
                 print_fn(print_str)
 
         if inspect.iscoroutinefunction(_f):
@@ -142,10 +147,10 @@ def timed(
                 start = counter()
                 try:
                     return_value = await coroutine_f(*args, **kwargs)
-                except Exception:
-                    report(start, failed=True)
+                except Exception as e:
+                    report(start, e)
                     raise
-                report(start, failed=False)
+                report(start)
                 return return_value
 
             wrapped = cast(Callable[P, R], async_wrapped)
@@ -155,10 +160,10 @@ def timed(
                 start = counter()
                 try:
                     return_value = _f(*args, **kwargs)
-                except Exception:
-                    report(start, failed=True)
+                except Exception as e:
+                    report(start, e)
                     raise
-                report(start, failed=False)
+                report(start)
                 return return_value
 
             wrapped = sync_wrapped
