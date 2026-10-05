@@ -1,4 +1,5 @@
-from collections.abc import Callable
+import inspect
+from collections.abc import Awaitable, Callable
 from functools import wraps
 from time import perf_counter as counter
 from typing import Any, ParamSpec, Protocol, TypeVar, cast, overload
@@ -48,7 +49,9 @@ def timed(
     Parameters
     ----------
     f: Callable
-        The function which execution time should be measured.
+        The function which execution time should be measured. It can be
+        also an async function - then the time until the returned
+        coroutine finishes is measured.
     name: str or None, optional
         String that should be printed as the function name. By default,
         the f.__name__ followed by a colon is used. It is separated from
@@ -108,34 +111,57 @@ def timed(
         print(qux.interval)
         ```
 
+    Async functions
+        ```
+        @timed
+        async def fetch():
+            ...
+        await fetch() # prints 'fetch: 1.02 s'
+        ```
+
     """
 
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
         label = _f.__name__ + ':' if name is None else name
 
-        @wraps(_f)
-        def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
-            start = counter()
-            exception = None
-            try:
-                return_value = _f(*args, **kwargs)
-            except Exception as e:
-                exception = e
-            finally:
-                interval = counter() - start
-                timed_f.interval = interval
-
+        def report(start: float, failed: bool) -> None:
+            interval = counter() - start
+            timed_f.interval = interval
             if print_fn is not None:
                 t, u = rescale_time(interval, unit=unit)
                 print_str = f'{label + " " if label else ""}{t:.3g} {u}'
-                if exception is not None:
+                if failed:
                     print_str += ' (failed)'
                 print_fn(print_str)
 
-            if exception is not None:
-                raise exception
+        if inspect.iscoroutinefunction(_f):
+            coroutine_f = cast(Callable[P, Awaitable[Any]], _f)
 
-            return return_value
+            @wraps(_f)
+            async def async_wrapped(*args: P.args, **kwargs: P.kwargs) -> Any:
+                start = counter()
+                try:
+                    return_value = await coroutine_f(*args, **kwargs)
+                except Exception:
+                    report(start, failed=True)
+                    raise
+                report(start, failed=False)
+                return return_value
+
+            wrapped = cast(Callable[P, R], async_wrapped)
+        else:
+            @wraps(_f)
+            def sync_wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
+                start = counter()
+                try:
+                    return_value = _f(*args, **kwargs)
+                except Exception:
+                    report(start, failed=True)
+                    raise
+                report(start, failed=False)
+                return return_value
+
+            wrapped = sync_wrapped
 
         timed_f = cast(CallableWithInterval[P, R], wrapped)
         return timed_f

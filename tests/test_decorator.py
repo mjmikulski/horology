@@ -1,3 +1,5 @@
+import asyncio
+import inspect
 from contextlib import redirect_stdout
 from io import StringIO
 from typing import assert_type
@@ -164,3 +166,37 @@ class TestDecorator:
             lines = out.getvalue().strip().split('\n')
 
         assert lines == ['foo: 120 ms', 'bar: 340 ms']
+
+    def test_async_function(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.3]
+
+        @timed
+        async def double(x: int) -> int:
+            await asyncio.sleep(0)
+            return 2 * x
+
+        with redirect_stdout(out := StringIO()):
+            result = asyncio.run(double(21))
+            print_str = out.getvalue().strip()
+
+        assert result == 42
+        assert_type(result, int)
+        assert print_str == 'double: 300 ms'
+        assert double.interval == 0.3
+        assert inspect.iscoroutinefunction(double)
+
+    def test_async_function_exception(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.3]
+
+        @timed
+        async def foo() -> None:
+            await asyncio.sleep(0)
+            raise ValueError('An error occurred')
+
+        with redirect_stdout(out := StringIO()):
+            with pytest.raises(ValueError, match='An error occurred'):
+                asyncio.run(foo())
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'foo: 300 ms (failed)'
+        assert foo.interval == 0.3
