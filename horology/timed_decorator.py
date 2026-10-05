@@ -70,7 +70,8 @@ def timed(
         coroutine finishes is measured.
     name: str or None, optional
         String that should be printed as the function name. By default,
-        the f.__name__ followed by a colon is used. It is separated from
+        the f.__name__ (or the type name if f has no __name__) followed
+        by a colon is used. It is separated from
         the time value with a space. See examples below.
     unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
         Time unit used to print elapsed time. Use 'a' or 'auto' for
@@ -143,7 +144,10 @@ def timed(
     """
 
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
-        label = _f.__name__ + ':' if name is None else name
+        if name is None:  # callables like functools.partial have no __name__
+            label = getattr(_f, '__name__', type(_f).__name__) + ':'
+        else:
+            label = name
 
         def report(start: float, exception: BaseException | None = None) -> None:
             interval = counter() - start

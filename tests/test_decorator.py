@@ -1,4 +1,5 @@
 import asyncio
+import functools
 import inspect
 from contextlib import redirect_stdout
 from io import StringIO
@@ -269,3 +270,16 @@ class TestDecorator:
         assert_type(negated, int)
         assert calculator.add.interval == 0.12
         assert_type(calculator.add.interval, float)
+
+    def test_callable_without_name(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12, 0, 0.12]
+
+        power_of_two = timed(functools.partial(pow, 2))
+        silent_power_of_two = timed(print_fn=None)(functools.partial(pow, 2))
+
+        with redirect_stdout(out := StringIO()):
+            assert power_of_two(3) == 8
+            assert silent_power_of_two(3) == 8
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'partial: 120 ms'
