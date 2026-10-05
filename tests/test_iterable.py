@@ -1,14 +1,11 @@
 from contextlib import redirect_stdout
 from io import StringIO
-from typing import TYPE_CHECKING
+from typing import assert_type
 from unittest.mock import Mock, patch
 
 import pytest
 
 from horology import Timed
-
-if TYPE_CHECKING:
-    from typing_extensions import assert_type
 
 
 @patch('horology.timed_iterable.counter')
@@ -95,8 +92,7 @@ class TestTimedIterable:
                               iteration_print_fn=None, summary_print_fn=None)
         for animal in timed_animals:
             animals.append(animal)
-            if TYPE_CHECKING:  # checked by mypy, not at runtime
-                assert_type(animal, str)
+            assert_type(animal, str)
 
         assert animals == ['cat', 'dog']
 

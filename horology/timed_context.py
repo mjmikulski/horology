@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from time import perf_counter as counter
 from types import TracebackType
-from typing import Any, Literal
+from typing import Any, Literal, Self
 
 from horology.tformatter import UnitType, rescale_time
 
@@ -74,7 +74,7 @@ class Timing:
         else:  # when still in the context
             return counter() - self._start
 
-    def __enter__(self) -> Timing:
+    def __enter__(self) -> Self:
         self._start = counter()
         return self
 

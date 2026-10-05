@@ -1,14 +1,11 @@
 from contextlib import redirect_stdout
 from io import StringIO
-from typing import TYPE_CHECKING
+from typing import assert_type
 from unittest.mock import Mock, patch
 
 import pytest
 
 from horology import timed
-
-if TYPE_CHECKING:
-    from typing_extensions import assert_type
 
 
 @patch('horology.timed_decorator.counter')
@@ -146,6 +143,5 @@ class TestDecorator:
 
         assert total == 12
         assert greeting == 'Hello cat'
-        if TYPE_CHECKING:  # checked by mypy, not at runtime
-            assert_type(total, int)
-            assert_type(greeting, str)
+        assert_type(total, int)
+        assert_type(greeting, str)

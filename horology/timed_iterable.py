@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable, Iterator
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, Self, TypeVar
 from warnings import warn
 
 from horology.tformatter import UnitType, rescale_time
@@ -80,7 +80,7 @@ class Timed(Generic[T]):
         self._last: float | None = None
         self._iterator: Iterator[T]
 
-    def __iter__(self) -> Timed[T]:
+    def __iter__(self) -> Self:
         self.intervals = []
         self._last = None
         self._start = counter()
