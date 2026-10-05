@@ -10,6 +10,32 @@ from horology.tformatter import UnitType, rescale_time
 
 T = TypeVar('T')
 
+SPARKS = '▁▂▃▄▅▆▇█'
+
+
+def draw_sparkline(values: list[float], width: int = 50) -> str:
+    """Draw values as a sparkline, scaled from zero to the maximum
+
+    If there are more values than `width`, consecutive values are
+    averaged, so the sparkline is not longer than `width`.
+
+    Examples
+    --------
+    >>> draw_sparkline([1, 2, 4, 8])
+    '▂▃▅█'
+
+    """
+    if len(values) > width:
+        n = len(values)
+        values = [mean(values[i * n // width:(i + 1) * n // width])
+                  for i in range(width)]
+
+    highest = max(values)
+    if highest <= 0:
+        return SPARKS[0] * len(values)
+    return ''.join(SPARKS[min(int(v / highest * len(SPARKS)), len(SPARKS) - 1)]
+                   for v in values)
+
 
 class Timed(Generic[T]):
     """ Wrapper to an iterable that measures time of each iteration
@@ -32,6 +58,10 @@ class Timed(Generic[T]):
         Function that is called to print the summary. Use `None` to
         disable printing the summary. You can provide e.g.
         `logger.info`. By default, the built-in `print` function is used.
+    sparkline: bool, optional
+        Whether to draw times of all iterations as a sparkline in the
+        summary, e.g. `▃█▆▆▆`. It is shown only if there were at least
+        2 iterations. By default, True.
 
     Attributes
     ----------
@@ -57,6 +87,7 @@ class Timed(Generic[T]):
         iteration    3: 100 s
 
         total 3 iterations in 120 s
+        ▁▁█
         min/median/max: 8.00/12.0/100 s
         average (std): 40.0 (52.0) s
         ```
@@ -74,13 +105,15 @@ class Timed(Generic[T]):
             *,
             unit: UnitType = 'a',
             iteration_print_fn: Callable[..., Any] | None = print,
-            summary_print_fn: Callable[..., Any] | None = print
+            summary_print_fn: Callable[..., Any] | None = print,
+            sparkline: bool = True
     ) -> None:
 
         self.iterable = iterable
         self.unit: UnitType = unit
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
+        self.sparkline = sparkline
 
         self.intervals: list[float] = []
         self._start: float | None = None
@@ -183,6 +216,8 @@ class Timed(Generic[T]):
 
             print_str += f'total {self.num_iterations} iterations '
             print_str += f'in {t_total:.3g} {u_total}\n'
+            if self.sparkline:
+                print_str += f'{draw_sparkline(self.intervals)}\n'
             print_str += f'min/median/max: ' \
                          f'{t_min:.3g}' \
                          f'/{t_median:.3g}' \
