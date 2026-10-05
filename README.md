@@ -11,7 +11,7 @@
 
 Conveniently measures the time of your loops, contexts and functions.
 
-![](hourglass_violet.jpg "Violet hourglass")
+![](horology_retro.jpg "Horology v1.5 retro poster")
 
 ## Installation
 
