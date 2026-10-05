@@ -1,3 +1,5 @@
+import asyncio
+from collections.abc import AsyncIterator
 from contextlib import redirect_stdout
 from io import StringIO
 from typing import assert_type
@@ -119,3 +121,27 @@ class TestTimedIterable:
         assert lines[-2] == 'min/median/max: 10/15/20 s'
         assert timed_animals.intervals == [10, 20]
         assert timed_animals.total == 30
+
+    def test_async_iterable(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3]
+
+        async def numbers() -> AsyncIterator[int]:
+            for i in range(2):
+                await asyncio.sleep(0)
+                yield i
+
+        async def collect() -> list[int]:
+            items = []
+            async for number in Timed(numbers()):
+                assert_type(number, int)
+                items.append(number)
+            return items
+
+        with redirect_stdout(out := StringIO()):
+            items = asyncio.run(collect())
+            lines = out.getvalue().strip().split('\n')
+
+        assert items == [0, 1]
+        assert lines[0] == 'iteration    1: 1 s'
+        assert lines[1] == 'iteration    2: 2 s'
+        assert lines[-3] == 'total 2 iterations in 3 s'

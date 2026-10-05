@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Any, Generic, Self, TypeVar
+from typing import Any, Generic, Self, TypeVar, cast
 from warnings import warn
 
 from horology.tformatter import UnitType, rescale_time
@@ -16,8 +16,9 @@ class Timed(Generic[T]):
 
     Parameters
     ----------
-    iterable: Iterable
-        Object that should be wrapped.
+    iterable: Iterable or AsyncIterable
+        Object that should be wrapped. Use `async for` to iterate over
+        an async iterable.
     unit: str, optional
         Time unit used to print elapsed time. Possible values:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
@@ -59,11 +60,17 @@ class Timed(Generic[T]):
         min/median/max: 8.00/12.0/100 s
         average (std): 40.0 (52.0) s
         ```
+
+    Async iterables
+        ```
+        async for page in Timed(fetch_pages()):
+            process(page)
+        ```
     """
 
     def __init__(
             self,
-            iterable: Iterable[T],
+            iterable: Iterable[T] | AsyncIterable[T],
             *,
             unit: UnitType = 'a',
             iteration_print_fn: Callable[..., Any] | None = print,
@@ -79,30 +86,50 @@ class Timed(Generic[T]):
         self._start: float | None = None
         self._last: float | None = None
         self._iterator: Iterator[T]
+        self._async_iterator: AsyncIterator[T]
 
     def __iter__(self) -> Self:
-        self.intervals = []
-        self._last = None
-        self._start = counter()
-        self._iterator = iter(self.iterable)
+        self._restart()
+        self._iterator = iter(cast(Iterable[T], self.iterable))
         return self
 
     def __next__(self) -> T:
         try:
-            now = counter()
-            if self._last is not None:
-                interval = now - self._last
-                self.intervals.append(interval)
-                t, u = rescale_time(interval, self.unit)
-                self.iteration_print_fn(f'iteration {self.num_iterations:4}: {t:.3g} {u}')
-
-            self._last = now
-
+            self._tick()
             return next(self._iterator)
 
         except StopIteration:
             self.print_summary()
             raise StopIteration
+
+    def __aiter__(self) -> Self:
+        self._restart()
+        self._async_iterator = aiter(cast(AsyncIterable[T], self.iterable))
+        return self
+
+    async def __anext__(self) -> T:
+        try:
+            self._tick()
+            return await anext(self._async_iterator)
+
+        except StopAsyncIteration:
+            self.print_summary()
+            raise
+
+    def _restart(self) -> None:
+        self.intervals = []
+        self._last = None
+        self._start = counter()
+
+    def _tick(self) -> None:
+        now = counter()
+        if self._last is not None:
+            interval = now - self._last
+            self.intervals.append(interval)
+            t, u = rescale_time(interval, self.unit)
+            self.iteration_print_fn(f'iteration {self.num_iterations:4}: {t:.3g} {u}')
+
+        self._last = now
 
     @property
     def num_iterations(self) -> int:
