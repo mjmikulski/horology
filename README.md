@@ -160,8 +160,9 @@ async for page in Timed(fetch_pages()):
 
 ## Failures
 
-If the timed code raises an exception, the time elapsed is printed with `(failed)` and also added to the
-exception, so you can see it right in the traceback, even if printing is turned off:
+If a function decorated with `@timed` or the code inside `Timing` raises an exception (also `KeyboardInterrupt`),
+the time elapsed is printed with `(failed)` and also added to the exception, so you can see it right in the traceback,
+even if printing is turned off:
 
 ```
 Traceback (most recent call last):

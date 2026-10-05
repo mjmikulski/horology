@@ -9,8 +9,8 @@
 - `Timed` is generic, so the type of iterated items is preserved.
 - All tools support async code: `timed` measures async functions until they finish, `Timing` works with `async with`
   and `Timed` with `async for`.
-- If the timed code raises an exception, the time elapsed is added to the exception as a note (PEP 678), so it is
-  shown in the traceback.
+- If a function decorated with `timed` or the code inside `Timing` raises an exception, the time elapsed is added to
+  the exception as a note (PEP 678), so it is shown in the traceback.
 - `timed` prints the time elapsed with `(failed)` also when the function is interrupted with Ctrl+C
   (`KeyboardInterrupt`), as `Timing` already did.
 - `Timed` summary can show times of all iterations as a sparkline, e.g. `▁▁█`, with `sparkline=True`.
