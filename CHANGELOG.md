@@ -7,6 +7,12 @@
 - Type hints are now visible to type checkers in projects using horology: `py.typed` marker and `__all__` were added.
 - `timed` decorator preserves the return type of the decorated function.
 - `Timed` is generic, so the type of iterated items is preserved.
+- All tools support async code: `timed` measures async functions until they finish, `Timing` works with `async with`
+  and `Timed` with `async for`.
+- If the timed code raises an exception, the time elapsed is added to the exception as a note (PEP 678), so it is
+  shown in the traceback.
+- `Timed` summary shows times of all iterations as a sparkline, e.g. `▁▁█`. It can be turned off with
+  `sparkline=False`.
 
 ### Breaking API changes
 
@@ -16,6 +22,9 @@
 ### Fixes
 
 - Iterating again over the same `Timed` object resets its statistics instead of mixing both loops.
+- `timed` used on an async function measured only creating the coroutine.
+- Functions decorated with the same `timed(...)` object printed the name of the first one.
+- `Timing.interval` kept growing after exiting the context if the measured time was exactly zero.
 
 ### Deprecations
 

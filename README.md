@@ -56,6 +56,7 @@ iteration    2: 8.00 s
 iteration    3: 100 s
 
 total 3 iterations in 120 s
+▁▁█
 min/median/max: 8.00/12.0/100 s
 average (std): 40.0 (52.0) s
 
@@ -71,6 +72,8 @@ for x in Timed(animals, unit='ms',
                summary_print_fn=logger.info):
     feed(x)
 ```
+
+The sparkline (`▁▁█`) of all iteration times can be turned off with `sparkline=False`.
 
 ### Timing a function with a `@timed` decorator
 
@@ -137,6 +140,35 @@ with Timing(print_fn=None) as t:
     ...
 
 make_use_of(t.interval)
+```
+
+## Async code
+
+All three tools work with async code as well:
+
+```python
+@timed
+async def fetch(url):
+    ...
+
+async with Timing(name='Downloading:'):
+    ...
+
+async for page in Timed(fetch_pages()):
+    ...
+```
+
+## Failures
+
+If the timed code raises an exception, the time elapsed is printed with `(failed)` and also added to the
+exception, so you can see it right in the traceback, even if printing is turned off:
+
+```
+fetch: 1.5 s (failed)
+Traceback (most recent call last):
+  ...
+TimeoutError: https://example.com
+horology: fetch: 1.5 s (failed)
 ```
 
 ## Time units
