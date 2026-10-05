@@ -61,7 +61,8 @@ class Timed(Generic[T]):
     sparkline: bool, optional
         Whether to draw times of all iterations as a sparkline in the
         last line of the summary, e.g. `▃█▆▆▆`. It is shown only if
-        there were at least 2 iterations. By default, False.
+        there were at least 2 iterations; long runs are averaged into
+        at most 50 characters. By default, False.
 
     Attributes
     ----------
@@ -82,13 +83,13 @@ class Timed(Generic[T]):
 
         Possible result:
         ```
-        iteration    1: 12.0 s
-        iteration    2: 8.00 s
+        iteration    1: 12 s
+        iteration    2: 8 s
         iteration    3: 100 s
 
         total 3 iterations in 120 s
-        min/median/max: 8.00/12.0/100 s
-        average (std): 40.0 (52.0) s
+        min/median/max: 8/12/100 s
+        average (std): 40 (52) s
         ```
 
     Async iterables

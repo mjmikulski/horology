@@ -22,7 +22,7 @@
 
 ### Fixes
 
-- Iterating again over the same `Timed` object resets its statistics instead of mixing both loops.
+- Starting a new loop over a finished `Timed` object resets its statistics instead of mixing both loops.
 - `timed` used on an async function measured only creating the coroutine.
 - Functions decorated with the same `timed(...)` object printed the name of the first one.
 - `Timing.interval` kept growing after exiting the context if the measured time was exactly zero.

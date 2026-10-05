@@ -51,13 +51,13 @@ for x in Timed(animals):
 Result:
 
 ```
-iteration    1: 12.0 s
-iteration    2: 8.00 s
+iteration    1: 12 s
+iteration    2: 8 s
 iteration    3: 100 s
 
 total 3 iterations in 120 s
-min/median/max: 8.00/12.0/100 s
-average (std): 40.0 (52.0) s
+min/median/max: 8/12/100 s
+average (std): 40 (52) s
 
 ```
 
@@ -72,8 +72,8 @@ for x in Timed(animals, unit='ms',
     feed(x)
 ```
 
-With `sparkline=True`, times of all iterations are also drawn as a sparkline (e.g. `▁▁█`) in the last line of the
-summary.
+With `sparkline=True`, the summary ends with a sparkline of iteration times, e.g. `▁▁█`. It is shown for 2 or more
+iterations, and long runs are averaged into at most 50 characters.
 
 ### Timing a function with a `@timed` decorator
 
@@ -151,11 +151,14 @@ All three tools work with async code as well:
 async def fetch(url):
     ...
 
-async with Timing(name='Downloading:'):
-    ...
+async def main():
+    await fetch(url)  # measured until the coroutine finishes
 
-async for page in Timed(fetch_pages()):
-    ...
+    async with Timing(name='Downloading:'):
+        ...
+
+    async for page in Timed(fetch_pages()):
+        ...
 ```
 
 ## Failures
