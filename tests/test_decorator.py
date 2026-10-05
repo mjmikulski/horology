@@ -145,3 +145,22 @@ class TestDecorator:
         assert greeting == 'Hello cat'
         assert_type(total, int)
         assert_type(greeting, str)
+
+    def test_one_decorator_for_many_functions(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12, 0, 0.34]
+        timed_ms = timed(unit='ms')
+
+        @timed_ms
+        def foo():
+            pass
+
+        @timed_ms
+        def bar():
+            pass
+
+        with redirect_stdout(out := StringIO()):
+            foo()
+            bar()
+            lines = out.getvalue().strip().split('\n')
+
+        assert lines == ['foo: 120 ms', 'bar: 340 ms']

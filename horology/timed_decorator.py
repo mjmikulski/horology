@@ -111,6 +111,8 @@ def timed(
     """
 
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
+        label = _f.__name__ + ': ' if name is None else name
+
         @wraps(_f)
         def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
             start = counter()
@@ -124,10 +126,8 @@ def timed(
                 timed_f.interval = interval
 
             if print_fn is not None:
-                nonlocal name
-                name = _f.__name__ + ': ' if name is None else name
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{name}{t:.3g} {u}'
+                print_str = f'{label}{t:.3g} {u}'
                 if exception is not None:
                     print_str += ' (failed)'
                 print_fn(print_str)
