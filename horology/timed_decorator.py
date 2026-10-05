@@ -51,8 +51,8 @@ def timed(
         The function which execution time should be measured.
     name: str or None, optional
         String that should be printed as the function name. By default,
-        the f.__name__ followed by a colon and space is used. See
-        examples below.
+        the f.__name__ followed by a colon is used. It is separated from
+        the time value with a space. See examples below.
     unit: {'auto', 'ns', 'us', 'ms', 's', 'min', 'h', 'd'}
         Time unit used to print elapsed time. Use 'a' or 'auto' for
         automatic time adjustment (default).
@@ -84,7 +84,7 @@ def timed(
 
     Change default name
         ```
-        @timed(name='bar elapsed ')
+        @timed(name='bar elapsed')
         def bar():
             ...
         bar() # prints 'bar elapsed 2.56 ms'
@@ -111,7 +111,7 @@ def timed(
     """
 
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
-        label = _f.__name__ + ': ' if name is None else name
+        label = _f.__name__ + ':' if name is None else name
 
         @wraps(_f)
         def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
@@ -127,7 +127,7 @@ def timed(
 
             if print_fn is not None:
                 t, u = rescale_time(interval, unit=unit)
-                print_str = f'{label}{t:.3g} {u}'
+                print_str = f'{label + " " if label else ""}{t:.3g} {u}'
                 if exception is not None:
                     print_str += ' (failed)'
                 print_fn(print_str)

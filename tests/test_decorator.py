@@ -27,7 +27,7 @@ class TestDecorator:
     def test_with_name_and_unit(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 21]
 
-        @timed(name='Function foo elapsed ', unit='ms')
+        @timed(name='Function foo elapsed', unit='ms')
         def foo():
             pass
 
@@ -38,7 +38,7 @@ class TestDecorator:
         assert print_str == 'Function foo elapsed 2.1e+04 ms'
 
     def test_wrapping_transparently(self, _: Mock) -> None:
-        @timed(name='bar elapsed: ', unit='auto')
+        @timed(name='bar elapsed:', unit='auto')
         def bar():
             """Very important function"""
 

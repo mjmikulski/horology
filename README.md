@@ -97,7 +97,7 @@ foo: 7.12 ms
 Choose time unit and name:
 
 ```python
-@timed(unit='s', name='Processing took ')
+@timed(unit='s', name='Processing took')
 def bar():
     ...
 ```

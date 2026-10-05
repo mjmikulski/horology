@@ -10,8 +10,8 @@
 
 ### Breaking API changes
 
-- `Timing` separates the name from the time value with a space, so the name should be given without a trailing space,
-  e.g. `Timing('Loading:')` prints `Loading: 1.23 s`.
+- `Timing` and `timed` separate the name from the time value with a space, so the name should be given without
+  a trailing space, e.g. `Timing('Loading:')` prints `Loading: 1.23 s`.
 
 ### Fixes
 
