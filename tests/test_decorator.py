@@ -224,3 +224,19 @@ class TestDecorator:
             asyncio.run(fetch())
 
         assert exc_info.value.__notes__ == ['horology: Fetching: 300 ms (failed)']
+
+    def test_keyboard_interrupt(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        @timed
+        def foo():
+            raise KeyboardInterrupt
+
+        with redirect_stdout(out := StringIO()):
+            with pytest.raises(KeyboardInterrupt) as exc_info:
+                foo()
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'foo: 120 ms (failed)'
+        assert foo.interval == 0.12
+        assert exc_info.value.__notes__ == ['horology: foo: 120 ms (failed)']

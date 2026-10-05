@@ -64,7 +64,8 @@ def timed(
         disable printing anything. You can provide e.g. `logger.info`.
         By default, the built-in `print` function is used.
 
-    If the function raises an exception, the time elapsed is added to
+    If the function raises an exception, including KeyboardInterrupt
+    (Ctrl+C), the time elapsed is printed with '(failed)' and added to
     the exception as a note, so it is shown in the traceback, e.g.
     'horology: foo: 1.02 s (failed)'.
 
@@ -128,7 +129,7 @@ def timed(
     def decorator(_f: Callable[P, R]) -> CallableWithInterval[P, R]:
         label = _f.__name__ + ':' if name is None else name
 
-        def report(start: float, exception: Exception | None = None) -> None:
+        def report(start: float, exception: BaseException | None = None) -> None:
             interval = counter() - start
             timed_f.interval = interval
             t, u = rescale_time(interval, unit=unit)
@@ -147,7 +148,7 @@ def timed(
                 start = counter()
                 try:
                     return_value = await coroutine_f(*args, **kwargs)
-                except Exception as e:
+                except BaseException as e:
                     report(start, e)
                     raise
                 report(start)
@@ -160,7 +161,7 @@ def timed(
                 start = counter()
                 try:
                     return_value = _f(*args, **kwargs)
-                except Exception as e:
+                except BaseException as e:
                     report(start, e)
                     raise
                 report(start)
