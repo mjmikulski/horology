@@ -164,7 +164,6 @@ If the timed code raises an exception, the time elapsed is printed with `(failed
 exception, so you can see it right in the traceback, even if printing is turned off:
 
 ```
-fetch: 1.5 s (failed)
 Traceback (most recent call last):
   ...
 TimeoutError: https://example.com
