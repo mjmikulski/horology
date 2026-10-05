@@ -40,7 +40,7 @@ class TestTimedIterable:
         counter_mock.side_effect = [-0.01, 0, 0.5, 2, 3, 4, 5, 6]
 
         with redirect_stdout(out := StringIO()):
-            for _ in Timed(range(5)):
+            for _ in Timed(range(5), sparkline=True):
                 pass
             lines = out.getvalue().strip().split('\n')
 
@@ -60,10 +60,9 @@ class TestTimedIterable:
                 pass
             lines = out.getvalue().strip().split('\n')
 
-        assert lines[-4] == 'total 3 iterations in 0.004 s'
-        assert lines[-3] == 'min/median/max: 0.001/0.001/0.002 s'
-        assert lines[-2] == 'average (std): 0.00133 (0.000577) s'
-        assert lines[-1] == '▅▅█'
+        assert lines[-3] == 'total 3 iterations in 0.004 s'
+        assert lines[-2] == 'min/median/max: 0.001/0.001/0.002 s'
+        assert lines[-1] == 'average (std): 0.00133 (0.000577) s'
 
     def test_summary_time_rescaling_ns(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 0.0015, 0.002, 0.004]
@@ -73,10 +72,9 @@ class TestTimedIterable:
                 pass
             lines = out.getvalue().strip().split('\n')
 
-        assert lines[-4] == 'total 3 iterations in 4e+06 ns'
-        assert lines[-3] == 'min/median/max: 5e+05/1.5e+06/2e+06 ns'
-        assert lines[-2] == 'average (std): 1.33e+06 (7.64e+05) ns'
-        assert lines[-1] == '▇▃█'
+        assert lines[-3] == 'total 3 iterations in 4e+06 ns'
+        assert lines[-2] == 'min/median/max: 5e+05/1.5e+06/2e+06 ns'
+        assert lines[-1] == 'average (std): 1.33e+06 (7.64e+05) ns'
 
     def test_no_print(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 10, 20, 30]
@@ -122,9 +120,8 @@ class TestTimedIterable:
             assert list(timed_animals) == ['cat', 'dog']
             lines = out.getvalue().strip().split('\n')
 
-        assert lines[-4] == 'total 2 iterations in 30 s'
-        assert lines[-3] == 'min/median/max: 10/15/20 s'
-        assert lines[-1] == '▅█'
+        assert lines[-3] == 'total 2 iterations in 30 s'
+        assert lines[-2] == 'min/median/max: 10/15/20 s'
         assert timed_animals.intervals == [10, 20]
         assert timed_animals.total == 30
 
@@ -150,13 +147,13 @@ class TestTimedIterable:
         assert items == [0, 1]
         assert lines[0] == 'iteration    1: 1 s'
         assert lines[1] == 'iteration    2: 2 s'
-        assert lines[-4] == 'total 2 iterations in 3 s'
+        assert lines[-3] == 'total 2 iterations in 3 s'
 
-    def test_no_sparkline(self, counter_mock: Mock) -> None:
+    def test_no_sparkline_by_default(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 1, 3]
 
         with redirect_stdout(out := StringIO()):
-            for _ in Timed(range(2), iteration_print_fn=None, sparkline=False):
+            for _ in Timed(range(2), iteration_print_fn=None):
                 pass
             lines = out.getvalue().strip().split('\n')
 

@@ -58,7 +58,6 @@ iteration    3: 100 s
 total 3 iterations in 120 s
 min/median/max: 8.00/12.0/100 s
 average (std): 40.0 (52.0) s
-▁▁█
 
 ```
 
@@ -73,7 +72,8 @@ for x in Timed(animals, unit='ms',
     feed(x)
 ```
 
-The sparkline (`▁▁█`) of all iteration times can be turned off with `sparkline=False`.
+With `sparkline=True`, times of all iterations are also drawn as a sparkline (e.g. `▁▁█`) in the last line of the
+summary.
 
 ### Timing a function with a `@timed` decorator
 

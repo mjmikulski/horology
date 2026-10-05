@@ -60,8 +60,8 @@ class Timed(Generic[T]):
         `logger.info`. By default, the built-in `print` function is used.
     sparkline: bool, optional
         Whether to draw times of all iterations as a sparkline in the
-        summary, e.g. `▃█▆▆▆`. It is shown only if there were at least
-        2 iterations. By default, True.
+        last line of the summary, e.g. `▃█▆▆▆`. It is shown only if
+        there were at least 2 iterations. By default, False.
 
     Attributes
     ----------
@@ -89,7 +89,6 @@ class Timed(Generic[T]):
         total 3 iterations in 120 s
         min/median/max: 8.00/12.0/100 s
         average (std): 40.0 (52.0) s
-        ▁▁█
         ```
 
     Async iterables
@@ -106,7 +105,7 @@ class Timed(Generic[T]):
             unit: UnitType = 'a',
             iteration_print_fn: Callable[..., Any] | None = print,
             summary_print_fn: Callable[..., Any] | None = print,
-            sparkline: bool = True
+            sparkline: bool = False
     ) -> None:
 
         self.iterable = iterable

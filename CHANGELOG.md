@@ -13,8 +13,7 @@
   shown in the traceback.
 - `timed` prints the time elapsed with `(failed)` also when the function is interrupted with Ctrl+C
   (`KeyboardInterrupt`), as `Timing` already did.
-- `Timed` summary shows times of all iterations as a sparkline, e.g. `▁▁█`. It can be turned off with
-  `sparkline=False`.
+- `Timed` summary can show times of all iterations as a sparkline, e.g. `▁▁█`, with `sparkline=True`.
 
 ### Breaking API changes
 
