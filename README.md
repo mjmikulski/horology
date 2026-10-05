@@ -118,7 +118,7 @@ Just wrap your code using a `with` statement:
 ```python
 from horology import Timing
 
-with Timing(name='Important calculations: '):
+with Timing(name='Important calculations:'):
     ...
 ```
 

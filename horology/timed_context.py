@@ -17,7 +17,7 @@ class Timing:
     ----------
     name: str, optional
         Message that should be printed before the time value, e.g.:
-        'Doing x: '
+        'Doing x:'. It is separated from the time value with a space.
     unit: str, optional
         Time unit used to print elapsed time. Possible values are:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
@@ -33,7 +33,7 @@ class Timing:
     Basic usage
         ```
         from horology import Timing
-        with Timing(name='Important calculations: '):
+        with Timing(name='Important calculations:'):
             do_a_lot()
         ```
         Possible result:
@@ -87,7 +87,7 @@ class Timing:
         self._interval = self.interval
         t, u = rescale_time(self.interval, self.unit)
         if self._print_fn is not None:
-            print_str = f'{self.name}{t:.3g} {u}'
+            print_str = f'{self.name + " " if self.name else ""}{t:.3g} {u}'
             if exc_type is not None:
                 print_str += ' (failed)'
             self._print_fn(print_str)

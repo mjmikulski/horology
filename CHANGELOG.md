@@ -8,6 +8,11 @@
 - `timed` decorator preserves the return type of the decorated function.
 - `Timed` is generic, so the type of iterated items is preserved.
 
+### Breaking API changes
+
+- `Timing` separates the name from the time value with a space, so the name should be given without a trailing space,
+  e.g. `Timing('Loading:')` prints `Loading: 1.23 s`.
+
 ### Fixes
 
 - Iterating again over the same `Timed` object resets its statistics instead of mixing both loops.

@@ -34,7 +34,7 @@ class TestContext:
         counter_mock.side_effect = [0, 0.12]
 
         with redirect_stdout(out := StringIO()):
-            with Timing(name='Preprocessing: ', unit='s'):
+            with Timing(name='Preprocessing:', unit='s'):
                 pass
             print_str = out.getvalue().strip()
 
