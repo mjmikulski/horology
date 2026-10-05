@@ -118,12 +118,14 @@ class Timed(Generic[T]):
         self.intervals: list[float] = []
         self._start: float | None = None
         self._last: float | None = None
+        self._running = False
         self._iterator: Iterator[T]
         self._async_iterator: AsyncIterator[T]
 
     def __iter__(self) -> Self:
-        self._restart()
-        self._iterator = iter(cast(Iterable[T], self.iterable))
+        if not self._running:  # do not restart a partially consumed iterator
+            self._restart()
+            self._iterator = iter(cast(Iterable[T], self.iterable))
         return self
 
     def __next__(self) -> T:
@@ -132,12 +134,14 @@ class Timed(Generic[T]):
             return next(self._iterator)
 
         except StopIteration:
+            self._running = False
             self.print_summary()
             raise StopIteration
 
     def __aiter__(self) -> Self:
-        self._restart()
-        self._async_iterator = aiter(cast(AsyncIterable[T], self.iterable))
+        if not self._running:
+            self._restart()
+            self._async_iterator = aiter(cast(AsyncIterable[T], self.iterable))
         return self
 
     async def __anext__(self) -> T:
@@ -146,6 +150,7 @@ class Timed(Generic[T]):
             return await anext(self._async_iterator)
 
         except StopAsyncIteration:
+            self._running = False
             self.print_summary()
             raise
 
@@ -153,6 +158,7 @@ class Timed(Generic[T]):
         self.intervals = []
         self._last = None
         self._start = counter()
+        self._running = True
 
     def _tick(self) -> None:
         now = counter()

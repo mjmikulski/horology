@@ -164,6 +164,19 @@ class TestTimedIterable:
                          'min/median/max: 1/1.5/2 s',
                          'average (std): 1.5 (0.707) s']
 
+    def test_resuming_partially_consumed_iterator(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3, 6]
+
+        with redirect_stdout(out := StringIO()):
+            iterator = iter(Timed([1, 2, 3], iteration_print_fn=None))
+            first = next(iterator)
+            rest = list(iterator)
+            lines = out.getvalue().strip().split('\n')
+
+        assert first == 1
+        assert rest == [2, 3]
+        assert lines[0] == 'total 3 iterations in 6 s'
+
 
 class TestSparkline:
 
