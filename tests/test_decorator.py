@@ -240,3 +240,32 @@ class TestDecorator:
         assert print_str == 'foo: 120 ms (failed)'
         assert foo.interval == 0.12
         assert exc_info.value.__notes__ == ['horology: foo: 120 ms (failed)']
+
+    def test_methods(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12, 0, 0.34, 0, 0.56]
+
+        class Calculator:
+            @timed(print_fn=None)
+            def add(self, x: int, y: int) -> int:
+                return x + y
+
+            @timed(print_fn=None)
+            async def double(self, x: int) -> int:
+                return 2 * x
+
+            @staticmethod
+            @timed(print_fn=None)
+            def negate(x: int) -> int:
+                return -x
+
+        calculator = Calculator()
+        total = calculator.add(5, y=7)
+        doubled = asyncio.run(calculator.double(21))
+        negated = Calculator.negate(3)
+
+        assert (total, doubled, negated) == (12, 42, -3)
+        assert_type(total, int)
+        assert_type(doubled, int)
+        assert_type(negated, int)
+        assert calculator.add.interval == 0.12
+        assert_type(calculator.add.interval, float)

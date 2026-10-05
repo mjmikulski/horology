@@ -1,14 +1,18 @@
+from __future__ import annotations
+
 import inspect
 from collections.abc import Awaitable, Callable
 from functools import wraps
 from time import perf_counter as counter
-from typing import Any, ParamSpec, Protocol, TypeVar, cast, overload
+from typing import Any, Concatenate, ParamSpec, Protocol, Self, TypeVar, cast, overload
 
 from horology.tformatter import UnitType, rescale_time
 
 P = ParamSpec('P')
+Q = ParamSpec('Q')
 R = TypeVar('R')
 R_co = TypeVar('R_co', covariant=True)
+S = TypeVar('S')
 
 
 class CallableWithInterval(Protocol[P, R_co]):
@@ -22,6 +26,18 @@ class CallableWithInterval(Protocol[P, R_co]):
     __name__: str
 
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> R_co: ...
+
+    # Binding to an instance, so that decorated methods are typed correctly
+    @overload
+    def __get__(self, instance: None, owner: type[Any], /) -> Self: ...
+
+    @overload
+    def __get__(
+            self: CallableWithInterval[Concatenate[S, Q], R],
+            instance: S,
+            owner: type[Any],
+            /
+    ) -> CallableWithInterval[Q, R]: ...
 
 
 @overload
