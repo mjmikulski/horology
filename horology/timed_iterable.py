@@ -87,9 +87,9 @@ class Timed(Generic[T]):
         iteration    3: 100 s
 
         total 3 iterations in 120 s
-        ▁▁█
         min/median/max: 8.00/12.0/100 s
         average (std): 40.0 (52.0) s
+        ▁▁█
         ```
 
     Async iterables
@@ -216,8 +216,6 @@ class Timed(Generic[T]):
 
             print_str += f'total {self.num_iterations} iterations '
             print_str += f'in {t_total:.3g} {u_total}\n'
-            if self.sparkline:
-                print_str += f'{draw_sparkline(self.intervals)}\n'
             print_str += f'min/median/max: ' \
                          f'{t_min:.3g}' \
                          f'/{t_median:.3g}' \
@@ -225,5 +223,7 @@ class Timed(Generic[T]):
             print_str += f'average (std): ' \
                          f'{t_mean:.3g} ' \
                          f'({t_std:.3g}) {u}'
+            if self.sparkline:
+                print_str += f'\n{draw_sparkline(self.intervals)}'
 
         self.summary_print_fn(print_str)

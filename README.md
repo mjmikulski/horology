@@ -56,9 +56,9 @@ iteration    2: 8.00 s
 iteration    3: 100 s
 
 total 3 iterations in 120 s
-▁▁█
 min/median/max: 8.00/12.0/100 s
 average (std): 40.0 (52.0) s
+▁▁█
 
 ```
 

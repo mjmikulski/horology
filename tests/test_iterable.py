@@ -46,9 +46,9 @@ class TestTimedIterable:
 
         assert lines[-5] == ''
         assert lines[-4] == 'total 5 iterations in 5.01 s'
-        assert lines[-3] == '▃█▆▆▆'
-        assert lines[-2] == 'min/median/max: 0.5/1/1.5 s'
-        assert lines[-1] == 'average (std): 1 (0.354) s'
+        assert lines[-3] == 'min/median/max: 0.5/1/1.5 s'
+        assert lines[-2] == 'average (std): 1 (0.354) s'
+        assert lines[-1] == '▃█▆▆▆'
 
         assert counter_mock.call_count == 7
 
@@ -61,9 +61,9 @@ class TestTimedIterable:
             lines = out.getvalue().strip().split('\n')
 
         assert lines[-4] == 'total 3 iterations in 0.004 s'
-        assert lines[-3] == '▅▅█'
-        assert lines[-2] == 'min/median/max: 0.001/0.001/0.002 s'
-        assert lines[-1] == 'average (std): 0.00133 (0.000577) s'
+        assert lines[-3] == 'min/median/max: 0.001/0.001/0.002 s'
+        assert lines[-2] == 'average (std): 0.00133 (0.000577) s'
+        assert lines[-1] == '▅▅█'
 
     def test_summary_time_rescaling_ns(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 0.0015, 0.002, 0.004]
@@ -74,9 +74,9 @@ class TestTimedIterable:
             lines = out.getvalue().strip().split('\n')
 
         assert lines[-4] == 'total 3 iterations in 4e+06 ns'
-        assert lines[-3] == '▇▃█'
-        assert lines[-2] == 'min/median/max: 5e+05/1.5e+06/2e+06 ns'
-        assert lines[-1] == 'average (std): 1.33e+06 (7.64e+05) ns'
+        assert lines[-3] == 'min/median/max: 5e+05/1.5e+06/2e+06 ns'
+        assert lines[-2] == 'average (std): 1.33e+06 (7.64e+05) ns'
+        assert lines[-1] == '▇▃█'
 
     def test_no_print(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [0, 0, 10, 20, 30]
@@ -123,8 +123,8 @@ class TestTimedIterable:
             lines = out.getvalue().strip().split('\n')
 
         assert lines[-4] == 'total 2 iterations in 30 s'
-        assert lines[-3] == '▅█'
-        assert lines[-2] == 'min/median/max: 10/15/20 s'
+        assert lines[-3] == 'min/median/max: 10/15/20 s'
+        assert lines[-1] == '▅█'
         assert timed_animals.intervals == [10, 20]
         assert timed_animals.total == 30
 
