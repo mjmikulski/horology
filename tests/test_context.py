@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import redirect_stdout
 from io import StringIO
 from typing import Any
@@ -129,3 +130,32 @@ class TestContext:
         assert print_str == '0 ns'
         assert t.interval == 0
         assert counter_mock.call_count == 2
+
+    def test_async_context(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        async def fetch() -> Timing:
+            async with Timing(name='Fetching:') as t:
+                await asyncio.sleep(0)
+            return t
+
+        with redirect_stdout(out := StringIO()):
+            t = asyncio.run(fetch())
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'Fetching: 120 ms'
+        assert t.interval == 0.12
+
+    def test_async_context_exception(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.5]
+
+        async def fetch() -> None:
+            async with Timing():
+                raise ValueError('Test Exception')
+
+        with redirect_stdout(out := StringIO()):
+            with pytest.raises(ValueError):
+                asyncio.run(fetch())
+            print_str = out.getvalue().strip()
+
+        assert print_str == '500 ms (failed)'

@@ -40,6 +40,12 @@ class Timing:
         ```
         Important calculations: 12.4 s
         ```
+
+    Async code
+        ```
+        async with Timing(name='Fetching:'):
+            await fetch()
+        ```
     """
 
     def __init__(
@@ -92,3 +98,14 @@ class Timing:
                 print_str += ' (failed)'
             self._print_fn(print_str)
         return False
+
+    async def __aenter__(self) -> Self:
+        return self.__enter__()
+
+    async def __aexit__(
+            self,
+            exc_type: type[BaseException] | None,
+            exc_val: BaseException | None,
+            exc_tb: TracebackType | None,
+    ) -> Literal[False]:
+        return self.__exit__(exc_type, exc_val, exc_tb)
