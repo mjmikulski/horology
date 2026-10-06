@@ -13,11 +13,11 @@ I am happy that you think about contributing to this project. This is a good ide
 Create an issue. 
 
 ## How to commit some code?
-1. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) horology.
+1. [Fork](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo) horology.
 2. Create a branch.
 3. Create virtual env with conda using latest version of supported python, e.g.:
     ```bash
-    conda create -n horology python=3.12
+    conda create -n horology python=3.14
     conda activate horology
     ```
 4. Install poetry using pip:
@@ -28,7 +28,7 @@ Create an issue.
     ```bash
     poetry install
     ```
-6. Write some useful and beautiful code that follows [PEP8](https://www.python.org/dev/peps/pep-0008/).
+6. Write some useful and beautiful code that follows [PEP8](https://peps.python.org/pep-0008/).
 7. Write unit tests.
 8. Run mypy and pytest and fix eventual errors:
     ```bash
@@ -36,7 +36,7 @@ Create an issue.
     pytest
     ```
 9. Commit and push your changes (in your fork).
-10. [Create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) 
+10. [Create a pull request](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request-from-a-fork) 
 from your fork to horology.
 11. Wait for my feedback.
 12. If I accept your changes, I will merge them into the master branch and release with the next release.
@@ -52,7 +52,7 @@ Follow the rules when writing a commit message:
 - limit the first line to 72 characters,
 - separate the first line from the body with one blank line.
 
-_adopted from [here](https://chris.beams.io/posts/git-commit#seven-rules)._
+_adopted from [here](https://chris.beams.io/git-commit#seven-rules)._
 
 
 ## I am open

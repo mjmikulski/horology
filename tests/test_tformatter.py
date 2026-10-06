@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from horology.tformatter import UnitType, rescale_time, UNITS
+from horology.tformatter import UNITS, UnitType, rescale_time
 
 
 class TestTformatter:

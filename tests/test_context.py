@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import redirect_stdout
 from io import StringIO
 from typing import Any
@@ -34,7 +35,7 @@ class TestContext:
         counter_mock.side_effect = [0, 0.12]
 
         with redirect_stdout(out := StringIO()):
-            with Timing(name='Preprocessing: ', unit='s'):
+            with Timing(name='Preprocessing:', unit='s'):
                 pass
             print_str = out.getvalue().strip()
 
@@ -101,7 +102,9 @@ class TestContext:
 
         assert print_str == ''
 
-    def test_error_when_accessing_interval_outside_context(self, counter_mock: Mock) -> None:
+    def test_error_when_accessing_interval_outside_context(
+            self, counter_mock: Mock
+    ) -> None:
         counter_mock.side_effect = [0, 0.12]
         timing_instance = Timing()
 
@@ -115,3 +118,53 @@ class TestContext:
 
         # Accessing interval after context should not raise an error
         _ = timing_instance.interval
+
+    def test_zero_interval(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [5.0, 5.0]
+
+        with redirect_stdout(out := StringIO()):
+            with Timing() as t:
+                pass
+            print_str = out.getvalue().strip()
+
+        assert print_str == '0 ns'
+        assert t.interval == 0
+        assert counter_mock.call_count == 2
+
+    def test_async_context(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.12]
+
+        async def fetch() -> Timing:
+            async with Timing(name='Fetching:') as t:
+                await asyncio.sleep(0)
+            return t
+
+        with redirect_stdout(out := StringIO()):
+            t = asyncio.run(fetch())
+            print_str = out.getvalue().strip()
+
+        assert print_str == 'Fetching: 120 ms'
+        assert t.interval == 0.12
+
+    def test_async_context_exception(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.5]
+
+        async def fetch() -> None:
+            async with Timing():
+                raise ValueError('Test Exception')
+
+        with redirect_stdout(out := StringIO()):
+            with pytest.raises(ValueError):
+                asyncio.run(fetch())
+            print_str = out.getvalue().strip()
+
+        assert print_str == '500 ms (failed)'
+
+    def test_exception_note(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0.5]
+
+        with pytest.raises(ValueError) as exc_info:
+            with Timing(name='Loading:', print_fn=None):
+                raise ValueError('Test Exception')
+
+        assert exc_info.value.__notes__ == ['horology: Loading: 500 ms (failed)']

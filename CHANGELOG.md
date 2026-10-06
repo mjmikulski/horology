@@ -1,5 +1,51 @@
 # Changelog
 
+## 1.5.0
+
+### Features and enhancements
+
+- Type hints are now visible to type checkers in projects using horology: `py.typed` marker and `__all__` were added.
+- `timed` decorator preserves the return type of the decorated function.
+- `Timed` is generic, so the type of iterated items is preserved.
+- All tools support async code: `timed` measures async functions until they finish, `Timing` works with `async with`
+  and `Timed` with `async for`.
+- If a function decorated with `timed` or the code inside `Timing` raises an exception, the time elapsed is added to
+  the exception as a note (PEP 678), so it is shown in the traceback.
+- `timed` prints the time elapsed with `(failed)` also when the function is interrupted with Ctrl+C
+  (`KeyboardInterrupt`), as `Timing` already did.
+- `Timed` summary can show times of all iterations as a sparkline, e.g. `▁▁█`, with `sparkline=True`.
+
+### Breaking API changes
+
+- `Timing` and `timed` separate the name from the time value with a space, so the name should be given without
+  a trailing space, e.g. `Timing('Loading:')` prints `Loading: 1.23 s`.
+
+### Fixes
+
+- Starting a new loop over a finished `Timed` object resets its statistics instead of mixing both loops.
+- `timed` used on an async function measured only creating the coroutine.
+- Functions decorated with the same `timed(...)` object printed the name of the first one.
+- `Timing.interval` kept growing after exiting the context if the measured time was exactly zero.
+
+### Deprecations
+
+- `Timed.n` emits `DeprecationWarning` and will be removed in 2.0. Use `Timed.num_iterations` instead.
+
+### Tests and deployment
+
+- Dev-dependencies and GitHub Actions were updated.
+- Package metadata was migrated to the PEP 621 `[project]` table.
+- Scheduled CodeQL runs were dropped.
+- Releases are published to PyPI from GitHub Actions via trusted publishing, with attestations.
+- Type hints of return values and iterated items are checked in tests.
+
+### Supported Python versions
+
+- Removed support for 3.10.
+- Added support for 3.15.
+
+Supported python versions are 3.11-3.15.
+
 ## 1.4.2
 
 ### Supported Python versions
@@ -31,7 +77,7 @@ Supported python versions are 3.10-3.13.
 
 ### Breaking API changes
 
-- Removed striping of whitespaces in unit name. So now ' h ' is not a valid unit name anymore.
+- Removed stripping of whitespace in unit name. So now ' h ' is not a valid unit name anymore.
 
 ### Fixes
 

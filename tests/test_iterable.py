@@ -1,12 +1,18 @@
+import asyncio
+from collections.abc import AsyncIterator
 from contextlib import redirect_stdout
 from io import StringIO
+from typing import assert_type
 from unittest.mock import Mock, patch
 
+import pytest
+
 from horology import Timed
+from horology.timed_iterable import draw_sparkline
 
 
 @patch('horology.timed_iterable.counter')
-class TestTimedIterableTest:
+class TestTimedIterable:
 
     def test_no_iter(self, counter_mock: Mock) -> None:
         with redirect_stdout(out := StringIO()):
@@ -28,19 +34,21 @@ class TestTimedIterableTest:
         assert lines[0] == 'iteration    1: 1 s'
         assert lines[1] == ''
         assert lines[2] == 'one iteration: 1 s'
+        assert len(lines) == 3
 
     def test_summary(self, counter_mock: Mock) -> None:
         counter_mock.side_effect = [-0.01, 0, 0.5, 2, 3, 4, 5, 6]
 
         with redirect_stdout(out := StringIO()):
-            for _ in Timed(range(5)):
+            for _ in Timed(range(5), sparkline=True):
                 pass
             lines = out.getvalue().strip().split('\n')
 
-        assert lines[-4] == ''
-        assert lines[-3] == 'total 5 iterations in 5.01 s'
-        assert lines[-2] == 'min/median/max: 0.5/1/1.5 s'
-        assert lines[-1] == 'average (std): 1 (0.354) s'
+        assert lines[-5] == ''
+        assert lines[-4] == 'total 5 iterations in 5.01 s'
+        assert lines[-3] == 'min/median/max: 0.5/1/1.5 s'
+        assert lines[-2] == 'average (std): 1 (0.354) s'
+        assert lines[-1] == '▃█▆▆▆'
 
         assert counter_mock.call_count == 7
 
@@ -72,10 +80,111 @@ class TestTimedIterableTest:
         counter_mock.side_effect = [0, 0, 10, 20, 30]
 
         with redirect_stdout(out := StringIO()):
-            T = Timed(['cat', 'dog', 'parrot'], iteration_print_fn=None, summary_print_fn=None)
-            for a in T:
+            timed_animals = Timed(['cat', 'dog', 'parrot'],
+                                  iteration_print_fn=None, summary_print_fn=None)
+            for a in timed_animals:
                 print(a)
             lines = out.getvalue().strip().split('\n')
 
         assert lines == ['cat', 'dog', 'parrot']
-        assert T.total == 30
+        assert timed_animals.total == 30
+
+    def test_item_type_is_preserved(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 2]
+
+        animals = []
+        timed_animals = Timed(['cat', 'dog'],
+                              iteration_print_fn=None, summary_print_fn=None)
+        for animal in timed_animals:
+            animals.append(animal)
+            assert_type(animal, str)
+
+        assert animals == ['cat', 'dog']
+
+    def test_n_is_deprecated(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 2]
+
+        timed_range = Timed(range(2), iteration_print_fn=None, summary_print_fn=None)
+        for _ in timed_range:
+            pass
+
+        with pytest.warns(DeprecationWarning, match='num_iterations'):
+            assert timed_range.n == 2
+
+    def test_iterating_again(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3, 10, 10, 20, 40]
+        timed_animals = Timed(['cat', 'dog'], iteration_print_fn=None)
+
+        with redirect_stdout(out := StringIO()):
+            assert list(timed_animals) == ['cat', 'dog']
+            assert list(timed_animals) == ['cat', 'dog']
+            lines = out.getvalue().strip().split('\n')
+
+        assert lines[-3] == 'total 2 iterations in 30 s'
+        assert lines[-2] == 'min/median/max: 10/15/20 s'
+        assert timed_animals.intervals == [10, 20]
+        assert timed_animals.total == 30
+
+    def test_async_iterable(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3]
+
+        async def numbers() -> AsyncIterator[int]:
+            for i in range(2):
+                await asyncio.sleep(0)
+                yield i
+
+        async def collect() -> list[int]:
+            items = []
+            async for number in Timed(numbers()):
+                assert_type(number, int)
+                items.append(number)
+            return items
+
+        with redirect_stdout(out := StringIO()):
+            items = asyncio.run(collect())
+            lines = out.getvalue().strip().split('\n')
+
+        assert items == [0, 1]
+        assert lines[0] == 'iteration    1: 1 s'
+        assert lines[1] == 'iteration    2: 2 s'
+        assert lines[-3] == 'total 2 iterations in 3 s'
+
+    def test_no_sparkline_by_default(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3]
+
+        with redirect_stdout(out := StringIO()):
+            for _ in Timed(range(2), iteration_print_fn=None):
+                pass
+            lines = out.getvalue().strip().split('\n')
+
+        assert lines == ['total 2 iterations in 3 s',
+                         'min/median/max: 1/1.5/2 s',
+                         'average (std): 1.5 (0.707) s']
+
+    def test_resuming_partially_consumed_iterator(self, counter_mock: Mock) -> None:
+        counter_mock.side_effect = [0, 0, 1, 3, 6]
+
+        with redirect_stdout(out := StringIO()):
+            iterator = iter(Timed([1, 2, 3], iteration_print_fn=None))
+            first = next(iterator)
+            rest = list(iterator)
+            lines = out.getvalue().strip().split('\n')
+
+        assert first == 1
+        assert rest == [2, 3]
+        assert lines[0] == 'total 3 iterations in 6 s'
+
+
+class TestSparkline:
+
+    def test_scaled_from_zero(self) -> None:
+        assert draw_sparkline([12, 8, 100]) == '▁▁█'
+        assert draw_sparkline([99, 100]) == '██'
+
+    def test_zeros(self) -> None:
+        assert draw_sparkline([0, 0, 0]) == '▁▁▁'
+
+    def test_long_input_is_averaged(self) -> None:
+        line = draw_sparkline([1.0] * 30 + [10.0] + [1.0] * 69)
+        assert len(line) == 50
+        assert line.count('█') == 1

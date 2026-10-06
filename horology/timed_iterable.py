@@ -1,19 +1,50 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator
 from statistics import mean, median, stdev
 from time import perf_counter as counter
-from typing import Any, Callable, Iterable
+from typing import Any, Generic, Self, TypeVar, cast
+from warnings import warn
 
 from horology.tformatter import UnitType, rescale_time
 
+T = TypeVar('T')
 
-class Timed:
+SPARKS = '▁▂▃▄▅▆▇█'
+
+
+def draw_sparkline(values: list[float], width: int = 50) -> str:
+    """Draw values as a sparkline, scaled from zero to the maximum
+
+    If there are more values than `width`, consecutive values are
+    averaged, so the sparkline is not longer than `width`.
+
+    Examples
+    --------
+    >>> draw_sparkline([1, 2, 4, 8])
+    '▂▃▅█'
+
+    """
+    if len(values) > width:
+        n = len(values)
+        values = [mean(values[i * n // width:(i + 1) * n // width])
+                  for i in range(width)]
+
+    highest = max(values)
+    if highest <= 0:
+        return SPARKS[0] * len(values)
+    return ''.join(SPARKS[min(int(v / highest * len(SPARKS)), len(SPARKS) - 1)]
+                   for v in values)
+
+
+class Timed(Generic[T]):
     """ Wrapper to an iterable that measures time of each iteration
 
     Parameters
     ----------
-    iterable: Iterable
-        Object that should we wrapped.
+    iterable: Iterable or AsyncIterable
+        Object that should be wrapped. Use `async for` to iterate over
+        an async iterable.
     unit: str, optional
         Time unit used to print elapsed time. Possible values:
          ['ns', 'us', 'ms', 's', 'min', 'h', 'd']. Use 'a' or 'auto'
@@ -27,16 +58,21 @@ class Timed:
         Function that is called to print the summary. Use `None` to
         disable printing the summary. You can provide e.g.
         `logger.info`. By default, the built-in `print` function is used.
+    sparkline: bool, optional
+        Whether to draw times of all iterations as a sparkline in the
+        last line of the summary, e.g. `▃█▆▆▆`. It is shown only if
+        there were at least 2 iterations; long runs are averaged into
+        at most 50 characters. By default, False.
 
     Attributes
     ----------
     num_iterations: int
-        How many iteration were executed.
+        How many iterations were executed.
     total: float
         Total time elapsed in seconds.
 
-    Example
-    -------
+    Examples
+    --------
     Basic usage
         ```
         from horology import Timed
@@ -47,55 +83,92 @@ class Timed:
 
         Possible result:
         ```
-        iteration    1: 12.0 s
-        iteration    2: 8.00 s
+        iteration    1: 12 s
+        iteration    2: 8 s
         iteration    3: 100 s
 
         total 3 iterations in 120 s
-        min/median/max: 8.00/12.0/100 s
-        average (std): 40.0 (52.0) s
+        min/median/max: 8/12/100 s
+        average (std): 40 (52) s
+        ```
+
+    Async iterables
+        ```
+        async for page in Timed(fetch_pages()):
+            process(page)
         ```
     """
 
     def __init__(
             self,
-            iterable: Iterable,
+            iterable: Iterable[T] | AsyncIterable[T],
             *,
             unit: UnitType = 'a',
             iteration_print_fn: Callable[..., Any] | None = print,
-            summary_print_fn: Callable[..., Any] | None = print
+            summary_print_fn: Callable[..., Any] | None = print,
+            sparkline: bool = False
     ) -> None:
 
         self.iterable = iterable
-        self.unit = unit
+        self.unit: UnitType = unit
         self.iteration_print_fn = iteration_print_fn or (lambda _: None)
         self.summary_print_fn = summary_print_fn or (lambda _: None)
+        self.sparkline = sparkline
 
         self.intervals: list[float] = []
         self._start: float | None = None
         self._last: float | None = None
+        self._running = False
+        self._iterator: Iterator[T]
+        self._async_iterator: AsyncIterator[T]
 
-    def __iter__(self) -> Timed:
-        self._start = counter()
-        self.iterable = iter(self.iterable)
+    def __iter__(self) -> Self:
+        if not self._running:  # do not restart a partially consumed iterator
+            self._restart()
+            self._iterator = iter(cast(Iterable[T], self.iterable))
         return self
 
-    def __next__(self):
+    def __next__(self) -> T:
         try:
-            now = counter()
-            if self._last is not None:
-                interval = now - self._last
-                self.intervals.append(interval)
-                t, u = rescale_time(interval, self.unit)
-                self.iteration_print_fn(f'iteration {self.num_iterations:4}: {t:.3g} {u}')
-
-            self._last = now
-
-            return next(self.iterable)
+            self._tick()
+            return next(self._iterator)
 
         except StopIteration:
+            self._running = False
             self.print_summary()
             raise StopIteration
+
+    def __aiter__(self) -> Self:
+        if not self._running:
+            self._restart()
+            self._async_iterator = aiter(cast(AsyncIterable[T], self.iterable))
+        return self
+
+    async def __anext__(self) -> T:
+        try:
+            self._tick()
+            return await anext(self._async_iterator)
+
+        except StopAsyncIteration:
+            self._running = False
+            self.print_summary()
+            raise
+
+    def _restart(self) -> None:
+        self.intervals = []
+        self._last = None
+        self._start = counter()
+        self._running = True
+
+    def _tick(self) -> None:
+        now = counter()
+        if self._last is not None:
+            interval = now - self._last
+            self.intervals.append(interval)
+            t, u = rescale_time(interval, self.unit)
+            self.iteration_print_fn(f'iteration {self.num_iterations:4}: {t:.3g} {u}')
+
+        self._last = now
 
     @property
     def num_iterations(self) -> int:
@@ -103,7 +176,9 @@ class Timed:
 
     @property
     def n(self) -> int:
-        "Deprecated"
+        """Deprecated, use `num_iterations` instead"""
+        warn('`n` is deprecated and will be removed in horology 2.0, '
+             'use `num_iterations` instead', DeprecationWarning, stacklevel=2)
         return self.num_iterations
 
     @property
@@ -154,5 +229,7 @@ class Timed:
             print_str += f'average (std): ' \
                          f'{t_mean:.3g} ' \
                          f'({t_std:.3g}) {u}'
+            if self.sparkline:
+                print_str += f'\n{draw_sparkline(self.intervals)}'
 
         self.summary_print_fn(print_str)
