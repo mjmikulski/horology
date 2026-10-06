@@ -25,9 +25,11 @@ Conveniently measures the time of your loops, contexts and functions.
 | 1.2              | 3.6-3.9           |
 | 1.1              | 3.6-3.8           |
 
-Horology can be installed with pip. It has no dependencies.
+Horology can be installed with uv or pip. It has no dependencies.
 
 ```
+uv add horology
+# or
 pip install horology
 ```
 
